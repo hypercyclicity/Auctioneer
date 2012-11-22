@@ -60,7 +60,6 @@ def encode64(data):
 def getAuctionInfo(auction):
 	encodedString = encode64(htb(auction))
 	request = "auct="+ urllib.quote(encodedString.encode("utf-8")) +"&lts=0&t=0"
-	print request
 
 	site = urllib.urlopen("http://quibidsinsider.com/ajax/", request)
 
@@ -78,12 +77,22 @@ def getCurrentAuctions():
 	oddAuctions = [m.start() for m in re.finditer('row odd auction-', siteContent)]
 	evenAuctions = [m.start() for m in re.finditer('row even auction-', siteContent)]
 	auctions = [siteContent[i+16:i+32] for i in oddAuctions] + [siteContent[i+17:i+33] for i in evenAuctions]
-	print auctions
 
 	# You can actually send all the ids at once
 	id = ''.join(n for n in auctions)
-	print getAuctionInfo(id)
-	return
+	info =  getAuctionInfo(id)
+	return info
+
+def prettyPrint():
+	data = json.loads(getCurrentAuctions())
+
+	for i in range(len(data["a"])):
+		# Grab the dictionary for a specific auction, append the auction number
+		auctionInfo = data["a"][i][data["a"][i].keys()[0]]
+		auctionInfo['auctionID'] = data["a"][i].keys()[0]
+		print auctionInfo
+	
+	
 
 if __name__ == "__main__":
-	getCurrentAuctions()
+	prettyPrint()
