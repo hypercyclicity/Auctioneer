@@ -3,7 +3,6 @@ import time
 import threading
 import sqlite3
 import datetime
-from BeautifulSoup import BeautifulSoup
 import re
 import base64
 import sys
@@ -45,7 +44,6 @@ def htb(data):
 	while i < len(data):
 		b.append(0x00 + int(data[i:i+2], 16) & (255))
 		i = i + 2
-	print b
 	return b
 
 def encode64(data):
@@ -71,27 +69,21 @@ def getAuctionInfo(auction):
 	return content
 
 def getCurrentAuctions():
+	"""
+	http://stackoverflow.com/a/1732454
+	"""
 	site = urllib.urlopen("http://quibidsinsider.com/auction/?page=1")
-	soup = BeautifulSoup(site)
-	auctions = soup.findAll('div',attrs={"class":re.compile('.*auction-.*')})
-	for auction in auctions:
-		try:
-			id = auction.find('div',attrs={"class":"title"}).findAll('a')[0]['href'].split('/')[2]
-			title = auction.find('div',attrs={"class":"title"}).find('a').contents[0]
-			print(id + " | " + title)
-			print getAuctionInfo(id)
-		except AttributeError: 
-			return
+	siteContent = site.read()
+	site.close()
+	oddAuctions = [m.start() for m in re.finditer('row odd auction-', siteContent)]
+	evenAuctions = [m.start() for m in re.finditer('row even auction-', siteContent)]
+	auctions = [siteContent[i+16:i+32] for i in oddAuctions] + [siteContent[i+17:i+33] for i in evenAuctions]
+	print auctions
+
+	# You can actually send all the ids at once
+	id = ''.join(n for n in auctions)
+	print getAuctionInfo(id)
+	return
 
 if __name__ == "__main__":
 	getCurrentAuctions()
-"""
-	auction = sys.argv[1]
-	print getAuctionInfo(auction)
-"""
-"""
-	while True:
-		thread = threading.Thread(target = parse)
-		thread.start()
-		time.sleep(1)
-"""
