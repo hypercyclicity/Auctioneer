@@ -24,6 +24,7 @@ def adder(fileName):
 				name = tokens[1]
 				value = -1
 				gamePlay = 0
+				isVoucher = 0
 				if name[0] == '$':
 					names = name.split(" ")
 					value_RHS = names[0]
@@ -31,13 +32,17 @@ def adder(fileName):
 					
 				if  "1X Gameplay" in name:
 					gamePlay = 1	
+				if  "Voucher Bids" in name:
+					isVoucher = 1
+					names = name.split(" ")
+					value = names[0]
 				price_string = tokens[2]
 				price = float(price_string[1:])
 				user = tokens[3]
 				time_left = int(tokens[4])
 				time_stamp = datetime.datetime.utcfromtimestamp(float(tokens[5]))
 				try:
-					cur.execute("INSERT INTO bid(id,name,price,user,time_left,bid_date, hour,value,isGameplay) VALUES(?,?,?,?,?,?,?)",(id,name,price,user,time_left,time_stamp, time_stamp.hour, value,gamePlay))
+					cur.execute("INSERT INTO bid(id,name,price,user,time_left,bid_date, hour,value,isGameplay,isVoucher) VALUES(?,?,?,?,?,?,?,?,?,?)",(id,name,price,user,time_left,time_stamp, time_stamp.hour, value,gamePlay,isVoucher))
 				except sqlite3.Error, e:
 					duplicates = duplicates + 1
 
