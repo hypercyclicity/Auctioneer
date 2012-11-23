@@ -32,7 +32,5 @@ if __name__ == "__main__":
                         auctionInfo.append(auctionDict)
                         auctionDict = {}
                         i = 1
-
-        print auctionInfo
         
         watch.prettyPrint(auctionInfo)
