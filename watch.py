@@ -41,17 +41,22 @@ def getAuctionInfo(auction):
     site.close()
     return content
 
-def getCurrentAuctions():
+def getCurrentAuctions(siteContent):
     """
     http://stackoverflow.com/a/1732454
     """
-    site = urllib.urlopen("http://quibidsinsider.com/auction/?page=1")
-    siteContent = site.read()
-    site.close()
     oddAuctions = [m.start() for m in re.finditer('row odd auction-', siteContent)]
     evenAuctions = [m.start() for m in re.finditer('row even auction-', siteContent)]
     auctions = [siteContent[i+16:i+32] for i in oddAuctions] + [siteContent[i+17:i+33] for i in evenAuctions]
+    return auctions
 
+def getSiteContent(page):
+    site = urllib.urlopen("http://quibidsinsider.com/auction/?page=" + str(page))
+    siteContent = site.read()
+    site.close()
+    return siteContent
+
+def compileCurrentAuctions(auctions, siteContent):
     auctionInfo = []
     auctionDict = {}
 
@@ -66,11 +71,7 @@ def getCurrentAuctions():
 
     return auctionInfo
 
-def prettyPrint():
-    auctionInfo = getCurrentAuctions()
-
-    print auctionInfo
-
+def prettyPrint(auctionInfo):
     while True:
         time.sleep(1)
     
@@ -79,9 +80,11 @@ def prettyPrint():
     
         info = getAuctionInfo(idString)
         data = json.loads(info)
+
         lastAuctionUpdate = data['lts']
-        print "Last Auction Update : " + str(lastAuctionUpdate)
-        print "Number of auctions being watched : " + str(len(auctionInfo))
+        sys.stderr.write("Last Auction Update : " + str(lastAuctionUpdate) + "\n")
+        sys.stderr.write("Number of auctions being watched : " + str(len(auctionInfo)) + "\n")
+        
         for i in range(len(data["a"])):
             # Grab the dictionary for a specific auction, append the auction number
             auctionJSON = data["a"][i][data["a"][i].keys()[0]]
@@ -109,4 +112,7 @@ def prettyPrint():
             break
 
 if __name__ == "__main__":
-    prettyPrint()
+    siteContent = getSiteContent(1)
+    auctionList = getCurrentAuctions(siteContent)
+    auctionInfo = compileCurrentAuctions(auctionList, siteContent)
+    prettyPrint(auctionInfo)
