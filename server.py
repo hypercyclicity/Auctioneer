@@ -6,13 +6,13 @@ import subprocess
 
 class Server:
 
-	def __init__(self):
+	def __init__(self,user = "sar7"):
 		self.hosts = []
 		for i in range(1,23):
 			if i<10:
-				self.hosts.append("sar7@uf0"+str(i)+".cs.ualberta.ca")
+				self.hosts.append(user+"@uf0"+str(i)+".cs.ualberta.ca")
 			else:
-				self.hosts.append("sar7@uf"+str(i)+".cs.ualberta.ca")
+				self.hosts.append(user+"@uf"+str(i)+".cs.ualberta.ca")
 		self.counter = 0
 		self.max =22
 
