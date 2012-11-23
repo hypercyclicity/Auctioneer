@@ -1,6 +1,6 @@
 import subprocess
 import watch
-
+import 
 # import server
 # s = server.Server()
 # s.launchProgram(prog = "name of program",args=[cmd line args],file_name = "to be redirected to")
@@ -19,13 +19,8 @@ class Server:
 
 
 	def launchProgram(self,prog = "client.py",args=[],file_name = "test1.txt"):
-#		prog = prog+args
-                call1 = ["python"]
-                call1.append("~/C466/Project/Auctioneer/" + prog) # +" > ~/C466/Project/Data/" + file_name
-                call1.append(args)
-                print call1
-                subprocess.call(call1)
-#		subprocess.call(["ssh",self.hosts[self.counter], "python ~/466/project/Auctioneer/"+ prog +" > ~/466/project/data/" + file_name]);
+		prog = prog+" " +args
+		subprocess.call(["ssh",self.hosts[self.counter], "python ~/466/project/Auctioneer/"+ prog +" > ~/466/project/data/" + file_name]);
 		self.counter = (self.counter +1)% self.max
 
 if __name__ == "__main__":
@@ -38,5 +33,6 @@ if __name__ == "__main__":
         arg = ""
         for a in auctionInfo:
                 arg = arg + str(a['id']) + ' "' + str(a['name']) + '" '
-
-        s.launchProgram(args=arg)
+		
+	f = str(time.time())+".txt"
+        s.launchProgram(args=arg,file_name=f)
