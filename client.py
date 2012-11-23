@@ -5,13 +5,13 @@ import watch
 
 if __name__ == "__main__":
 
-#	try:
-#        	pid = os.fork()
-#        	if pid > 0:
-#                	sys.exit(0)
-#     	except OSError, e:
-#        	sys.stderr.write("fork #1 failed: %d (%s)\n" % (e.errno, e.strerror))
-#        	sys.exit(1)
+	try:
+       		pid = os.fork()
+        	if pid > 0:
+        	       	sys.exit(0)
+     	except OSError, e:
+        	sys.stderr.write("fork #1 failed: %d (%s)\n" % (e.errno, e.strerror))
+        	sys.exit(1)
 
         auctionInfo = []
         auctionDict = {}

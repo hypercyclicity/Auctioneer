@@ -82,8 +82,8 @@ def prettyPrint(auctionInfo):
         data = json.loads(info)
 
         lastAuctionUpdate = data['lts']
-        sys.stderr.write("Last Auction Update : " + str(lastAuctionUpdate) + "\n")
-        sys.stderr.write("Number of auctions being watched : " + str(len(auctionInfo)) + "\n")
+       # sys.stderr.write("Last Auction Update : " + str(lastAuctionUpdate) + "\n")
+        #sys.stderr.write("Number of auctions being watched : " + str(len(auctionInfo)) + "\n")
         
         for i in range(len(data["a"])):
             # Grab the dictionary for a specific auction, append the auction number
