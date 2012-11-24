@@ -73,6 +73,8 @@ def compileCurrentAuctions(auctions, siteContent):
 
 def prettyPrint(auctionInfo):
     oldAuctionsZero = []
+    oldOldAuctionsZero = []
+    oldOldOldAuctionsZero = []
     while True:
         time.sleep(1)
     
@@ -119,13 +121,16 @@ def prettyPrint(auctionInfo):
             break
 
         for aucID in auctionsZero:
-            if aucID in oldAuctionsZero:
-                auctionInfo[:] = [d for d in auctionInfo if d.get('id') != str(aucID).upper]
+            if aucID in oldOldOldAuctionsZero:
+                auctionInfo[:] = [d for d in auctionInfo if d.get('id') != str(aucID).upper()]
 
+        print "Length of auction info : " + str(len(auctionInfo))
+        oldOldOldAuctionsZero = oldOldAuctionsZero
+        oldOldAuctionsZero = oldAuctionsZero
         oldAuctionsZero = auctionsZero
 
 if __name__ == "__main__":
-    siteContent = getSiteContent(1)
+    siteContent = getSiteContent(4)
     auctionList = getCurrentAuctions(siteContent)
     auctionInfo = compileCurrentAuctions(auctionList, siteContent)
     prettyPrint(auctionInfo)
