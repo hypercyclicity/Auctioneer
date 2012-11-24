@@ -72,6 +72,7 @@ def compileCurrentAuctions(auctions, siteContent):
     return auctionInfo
 
 def prettyPrint(auctionInfo):
+    oldAuctionsZero = []
     while True:
         time.sleep(1)
     
@@ -84,6 +85,8 @@ def prettyPrint(auctionInfo):
         lastAuctionUpdate = data['lts']
        # sys.stderr.write("Last Auction Update : " + str(lastAuctionUpdate) + "\n")
         #sys.stderr.write("Number of auctions being watched : " + str(len(auctionInfo)) + "\n")
+
+        auctionsZero = []
         
         for i in range(len(data["a"])):
             # Grab the dictionary for a specific auction, append the auction number
@@ -97,6 +100,9 @@ def prettyPrint(auctionInfo):
                     "|$|" + str(auctionJSON['w']) + \
                     "|$|" + str(auctionJSON['tl']) + \
                     "|$|" + str(lastAuctionUpdate)
+
+                if auctionJSON['tl'] == 0:
+                        auctionsZero.append(auctionJSON['auctionID'])
             except KeyError:
                 print auctionInfo[map(itemgetter('id'), auctionInfo).index(str(data["a"][i].keys()[0]).upper())]['name'] + \
                     "|$|" + str(auctionJSON['auctionID']) + \
@@ -111,6 +117,12 @@ def prettyPrint(auctionInfo):
         if not auctionInfo:
             # All of the auctions we are monitoring have completed
             break
+
+        for aucID in auctionsZero:
+            if aucID in oldAuctionsZero:
+                auctionInfo[:] = [d for d in auctionInfo if d.get('id') != str(aucID).upper]
+
+        oldAuctionsZero = auctionsZero
 
 if __name__ == "__main__":
     siteContent = getSiteContent(1)
