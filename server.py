@@ -30,21 +30,17 @@ if __name__ == "__main__":
 
         pageNum = 4
         auctionInterval = 60*5
-        auctionInfo = []
+        oldAuctionList = []
 
         while True:
-                tempAuctionInfo = []
                 siteContent = watch.getSiteContent(pageNum)
                 auctionList = watch.getCurrentAuctions(siteContent)
-                tempAuctionInfo = watch.compileCurrentAuctions(auctionList, siteContent)
+                
+                # Make sure we didn't see the auction last time
+                auctionList = [x for x in auctionList if x not in oldAuctionList ]
+                oldAuctionList = auctionList
 
-                # Just check against last auctions to see if we have any of the same ones
-                for tempAuc in tempAuctionInfo:
-                        for auc in auctionInfo:
-                                if auc['id'] == tempAuc['id']:
-                                        tempAuctionInfo.pop(map(itemgetter('id'), tempAuctionInfo).index(str(tempAuc['id']).upper()))
-
-                auctionInfo = tempAuctionInfo
+                auctionInfo = watch.compileCurrentAuctions(auctionList, siteContent)
 
                 arg = ""
                 for a in auctionInfo:
