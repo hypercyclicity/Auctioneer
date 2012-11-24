@@ -33,11 +33,6 @@ def DataBuilder():
 						f.write(" ")
 					f.write(str(z))
 			f.write("\n")
-			c = c + 1
-			if ( c == 100):
-				break
-			
-
 		con.close()
 	except sqlite3.Error, e:
 		print "Error %s:" % e.args[0]
