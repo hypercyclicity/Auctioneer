@@ -105,7 +105,8 @@ def prettyPrint(auctionInfo):
                     "|$|" + "0" \
                     "|$|" + str(auctionJSON['e'])
                 # Auction must be over, remove it from the list
-                auctionInfo.pop(map(itemgetter('id'), auctionInfo).index(str(data["a"][i].keys()[0]).upper()))
+		old_auction=str(data["a"][i].keys()[0]).upper()
+                auctionInfo[:] = [d for d in auctionInfo if d.get('id') != old_auction]
 
         if not auctionInfo:
             # All of the auctions we are monitoring have completed
