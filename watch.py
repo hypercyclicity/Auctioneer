@@ -124,7 +124,6 @@ def prettyPrint(auctionInfo):
             if aucID in oldOldOldAuctionsZero:
                 auctionInfo[:] = [d for d in auctionInfo if d.get('id') != str(aucID).upper()]
 
-        print "Length of auction info : " + str(len(auctionInfo))
         oldOldOldAuctionsZero = oldOldAuctionsZero
         oldOldAuctionsZero = oldAuctionsZero
         oldAuctionsZero = auctionsZero
