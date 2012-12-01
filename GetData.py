@@ -8,7 +8,8 @@ import sys
 
 def DataBuilder():
 	try:
-		f = open('data.csv','w')
+		f = open('datax.csv','w')
+		y = open('datay.csv','w')
 		con = sqlite3.connect('auction.db')
 		cur = con.cursor()
 		cur.execute('SELECT SQLITE_VERSION()')

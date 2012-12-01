@@ -6,10 +6,13 @@ import sqlite3
 import csv
 import time
 import sys
+import glob
+import os
 from optparse import OptionParser
             
 def adder(fileName):
 	duplicates = 0
+	print fileName
 	try:
 		con = sqlite3.connect('auction.db')
 		cur = con.cursor()
@@ -20,13 +23,14 @@ def adder(fileName):
 		for line in f:
 			tokens = line.split("|$|")
 			if len(tokens) == 6:
-				id = tokens[0]
-				name = tokens[1]
+				id = tokens[1]
+				name = tokens[0]
 				value = -1
 				gamePlay = 0
 				isVoucher = 0
 				if name[0] == '$':
 					names = name.split(" ")
+
 					value_RHS = names[0]
 					value =int(value_RHS[1:])
 					
@@ -41,10 +45,11 @@ def adder(fileName):
 				user = tokens[3]
 				time_left = int(tokens[4])
 				time_stamp = datetime.datetime.utcfromtimestamp(float(tokens[5]))
-				try:
-					cur.execute("INSERT INTO bid(id,name,price,user,time_left,bid_date, hour,value,isGameplay,isVoucher) VALUES(?,?,?,?,?,?,?,?,?,?)",(id,name,price,user,time_left,time_stamp, time_stamp.hour, value,gamePlay,isVoucher))
-				except sqlite3.Error, e:
-					duplicates = duplicates + 1
+				if value != -1 and len(user) > 0 and price > 0.0:
+					try:
+						cur.execute("INSERT INTO bid(id,name,price,user,time_left,bid_date, hour,value,isGameplay,isVoucher) VALUES(?,?,?,?,?,?,?,?,?,?)",(id,name,price,user,time_left,time_stamp, time_stamp.hour, value,gamePlay,isVoucher))
+					except sqlite3.Error, e:
+						duplicates = duplicates + 1
 
 		f.close()
 		con.commit()
@@ -55,8 +60,9 @@ def adder(fileName):
 		
     		
 if __name__ == "__main__":
+	for files in glob.glob("*.txt"):
+    		print files 
+    		adder(files)	
 
-	for each in sys.argv[1:]:
-		adder(each)
 
 

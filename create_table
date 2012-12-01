@@ -1,3 +1,5 @@
 sqlite3 auction.db
 
 CREATE TABLE bid (id char(25),name char(50), price float, user char(25),time_left int, bid_date date, hour int, value int, isGameplay int, isVoucher int, PRIMARY KEY (id,price));
+
+CREATE TABLE winner (id char(25), price float,numBids int,  PRIMARY KEY (id));
