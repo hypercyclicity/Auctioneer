@@ -20,26 +20,34 @@ def DataBuilder():
 			id = x
 			maxPrice = 0.0;
 		 	winID = "";
-			query = ("SELECT b.id, b.price FROM bid b WHERE b.id = ? ")
+		 	winUser = ""
+			query = ("SELECT b.id, b.price, b.user FROM bid b WHERE b.id == ? ")
 			cur.execute(query,id)
 			isFirst = 1
 			size = 0;
 			for row in cur:
 				for z in row:
 					if isFirst == 1:
-						id = z
-						isFirst = 0;					
-					else:
+						idu = z
+						isFirst = 2;					
+					elif isFirst == 2:
 						price = z
+					     	isFirst = 3;
+					else:
+						user = z
 				if price > maxPrice:
 					maxPrice = price
-					winId = id
+					winID = idu
+					winUser = user
 				size = size + 1
 			try:
-				cur.execute("INSERT INTO winner(id,price,numBids) VALUES(?,?,?)",(winId,maxPrice,size))
+				if maxPrice > 0.0:
+					cur.execute("INSERT INTO winner(id,price,numBids,user) VALUES(?,?,?,?)"
+					,(winID,maxPrice,size,winUser))
 			except sqlite3.Error, e:
 				print "Error Insert %s:" % e.args[0]
 				sys.exit(1)	
+		con.commit()
 		con.close()
 	except sqlite3.Error, e:
 		print "Error Select %s:" % e.args[0]
