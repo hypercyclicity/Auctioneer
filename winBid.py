@@ -5,33 +5,35 @@ import sqlite3
 import datetime
 import re
 import sys
+from datetime import timedelta
+
 
 def DataBuilder():
 	try:
-		f = open('winBidx.csv','w')
-		y = open('winBidy.csv','w')
+		d = timedelta(seconds=10)
+		f = open('../winBidx.csv','w')
+		y = open('../winBidy.csv','w')
 		con = sqlite3.connect('auction.db')
 		cur = con.cursor()
 		cur.execute('SELECT SQLITE_VERSION()')
 		data = cur.fetchone()
 		print "SQLite version: %s" % data
 		
-		cur.execute('SELECT Distinct b.id FROM bid b')
+		cur.execute('SELECT b.price, b.time_left, b.bid_date, b.hour, b.value, b.isGameplay, b.isVoucher FROM bid b')
 		allentries = cur.fetchall();
-		c = 0
 		for x in allentries:
-			id = x
-			query = ("SELECT min(b.hour), max(b.hour), max(b.price), count(*)  						FROM bid b WHERE b.id = ? ")
-			cur.execute(query,id)
-			isFirst = 1
-			for row in cur:
-				for z in row:
-					if isFirst == 1:
-						isFirst = 0
-					else:
-						f.write(" ")
-					f.write(str(z))
-			f.write("\n")
+			price = x[0]
+			time_left  = x[1]
+			bid_date = x[2]
+			hour = x[3]
+			value = x[4]
+			isGameplay = x[5]
+			isVoucher = x[6]
+			print bid_date
+			newtime = bid_date
+			newtime.seconds = newtime.seconds - 10
+			print newtime
+			sys.exit(0)
 		f.close()
 		y.close()
 		con.close()
