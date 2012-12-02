@@ -25,7 +25,6 @@ def DataBuilder():
 			for row in cur:
 				for z in row:
 					if z == 1:
-						
 						try:
 							cur.execute("DELETE FROM bid  WHERE id == ?", id)
 							cur.execute("DELETE FROM winner  WHERE id == ?", id)
