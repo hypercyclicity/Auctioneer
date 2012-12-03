@@ -1,6 +1,5 @@
 import sqlite3
 import datetime
-#!/usr/bin/python
 import re
 import sqlite3
 import csv
@@ -58,11 +57,88 @@ def adder(fileName):
 		print "Error %s:" % e.args[0]
 		sys.exit(1)
 		
-    		
+def addwinner():
+	try:
+		con = sqlite3.connect('auction.db')
+		cur = con.cursor()
+		cur.execute('SELECT SQLITE_VERSION()')
+		data = cur.fetchone()
+		print "SQLite version: %s" % data
+		
+		cur.execute('SELECT Distinct b.id FROM bid b')
+		allentries = cur.fetchall();
+		for x in allentries:
+			id = x
+			maxPrice = 0.0;
+		 	winID = "";
+		 	winUser = ""
+			query = ("SELECT b.id, b.price, b.user FROM bid b WHERE b.id == ? ")
+			cur.execute(query,id)
+			isFirst = 1
+			size = 0;
+			for row in cur:
+				for z in row:
+					if isFirst == 1:
+						idu = z
+						isFirst = 2;					
+					elif isFirst == 2:
+						price = z
+					     	isFirst = 3;
+					else:
+						user = z
+				if price > maxPrice:
+					maxPrice = price
+					winID = idu
+					winUser = user
+				size = size + 1
+			try:
+				if maxPrice > 0.0:
+					cur.execute("INSERT INTO winner(id,price,numBids,user) VALUES(?,?,?,?)"
+					,(winID,maxPrice,size,winUser))
+			except sqlite3.Error, e:
+				print "Error Insert %s:" % e.args[0]
+		con.commit()
+		con.close()
+	except sqlite3.Error, e:
+		print "Error Select %s:" % e.args[0]
+		sys.exit(1)
+
+def RemoveBadData():
+	try:
+		con = sqlite3.connect('auction.db')
+		cur = con.cursor()
+		cur.execute('SELECT SQLITE_VERSION()')
+		data = cur.fetchone()
+		print "SQLite version: %s" % data
+		
+		cur.execute('SELECT Distinct b.id FROM bid b')
+		allentries = cur.fetchall();
+		for x in allentries:
+			id = x
+			maxPrice = 0.0;
+		 	winID = "";
+			query = ("SELECT count(b.id) FROM bid b WHERE b.id == ? ")
+			cur.execute(query,id)
+			for row in cur:
+				for z in row:
+					if z == 1:
+						try:
+							cur.execute("DELETE FROM bid  WHERE id == ?", id)
+							cur.execute("DELETE FROM winner  WHERE id == ?", id)
+						except sqlite3.Error, e:
+							print "Error Insert2 %s:" % e.args[0]
+							sys.exit(1)	
+		con.close()
+	except sqlite3.Error, e:
+		print "Error Select %s:" % e.args[0]
+		sys.exit(1)
+		    		
 if __name__ == "__main__":
 	for files in glob.glob("*.txt"):
     		print files 
-    		adder(files)	
+    		adder(files)
+    	RemoveBadData()
+    	addwinner()	
 
 
 
