@@ -29,7 +29,6 @@ def adder(fileName):
 				isVoucher = 0
 				if name[0] == '$':
 					names = name.split(" ")
-
 					value_RHS = names[0]
 					value =int(value_RHS[1:])
 					
@@ -40,7 +39,7 @@ def adder(fileName):
 					names = name.split(" ")
 					value = names[0]
 				price_string = tokens[2]
-				price = float(price_string[1:])
+				price = float(price_string)
 				user = tokens[3]
 				time_left = int(tokens[4])
 				time_stamp = datetime.datetime.utcfromtimestamp(float(tokens[5]))
@@ -65,32 +64,17 @@ def addwinner():
 		data = cur.fetchone()
 		print "SQLite version: %s" % data
 		
-		cur.execute('SELECT Distinct b.id FROM bid b')
+		cur.execute('SELECT b.id, max(b.price), b.user FROM bid b Group by b.id')
 		allentries = cur.fetchall();
 		for x in allentries:
-			id = x
-			maxPrice = 0.0;
-		 	winID = "";
-		 	winUser = ""
-			query = ("SELECT b.id, b.price, b.user FROM bid b WHERE b.id == ? ")
-			cur.execute(query,id)
-			isFirst = 1
-			size = 0;
-			for row in cur:
-				for z in row:
-					if isFirst == 1:
-						idu = z
-						isFirst = 2;					
-					elif isFirst == 2:
-						price = z
-					     	isFirst = 3;
-					else:
-						user = z
-				if price > maxPrice:
-					maxPrice = price
-					winID = idu
-					winUser = user
-				size = size + 1
+			winID = x[0];
+			yyyy = str(winID)
+			maxPrice = x[1];
+			winUser = x[2];
+			query = "SELECT count(*) FROM bid b Where b.id == ?"
+			cur.execute(query,(winID,))
+			sizes = cur.fetchall();
+			size = sizes[0][0]
 			try:
 				if maxPrice > 0.0:
 					cur.execute("INSERT INTO winner(id,price,numBids,user) VALUES(?,?,?,?)"
@@ -100,7 +84,7 @@ def addwinner():
 		con.commit()
 		con.close()
 	except sqlite3.Error, e:
-		print "Error Select %s:" % e.args[0]
+		print "Error Select 2 %s:" % e.args[0]
 		sys.exit(1)
 
 def RemoveBadData():

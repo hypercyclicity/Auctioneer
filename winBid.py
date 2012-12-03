@@ -20,8 +20,12 @@ def GetNumAftertime(time ,thisID, cur):
 	temp =  cur.fetchall();
 	return temp[0][0]
 
-#def GetTimeForlastSoManyBids(numBids,thisID,cur)
-#	query = 'SELECT 
+def GetTimeForlastSoManyBids(price,thisID,cur):
+	query = 'SELECT b.bid_date FROM bid b WHERE b.price == ? AND b.id == ?'
+	cur.execute(query, (price,thisID))
+	temp =  cur.fetchall();
+	print len(temp)
+	#sys.exit(1)
 
 def DataBuilder():
 	try:
@@ -57,6 +61,11 @@ def DataBuilder():
 			count10secs = GetNumAftertime(less10secs,thisID,cur)
 			count1min = GetNumAftertime(less1min,thisID,cur)
 			count5min =  GetNumAftertime(less5min,thisID,cur)
+			
+			timeLast10Bids = 0
+			timeLast20Bids = 0
+			if price > 0.10:
+				timeLast10Bids = GetTimeForlastSoManyBids(price-.1,thisID,cur)
 			f.write(str(price) + " " )
 			f.write(str(time_left) + " " )
 			f.write(str(calendar.timegm(bid_date.timetuple())) + " ")	
@@ -65,7 +74,7 @@ def DataBuilder():
 			f.write(str(isGameplay) + " " )
 			f.write(str(isVoucher) + "\n" )
 			y.write(str(IsWinningBid(thisID, price, cur)) + "\n")
-			print c," bids complete complete         \r",
+		#	print c," bids complete complete         \r",
 			c = c+1
 		f.close()
 		y.close()
