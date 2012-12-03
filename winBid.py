@@ -7,6 +7,12 @@ import re
 import sys
 from datetime import timedelta
 from datetime import datetime
+import calendar
+
+def IsWinningBid(thisID, price, cur):
+	cur.execute('SELECT count(w.price) FROM winner w WHERE w.id == ? AND w.price ==?',(thisID,price))
+	x = cur.fetchall();
+	return x[0][0]
 
 def GetNumAftertime(time ,thisID, cur):
 	query = 'Select count(*) FROM bid b where b.bid_date > ? and b.id == ?' 
@@ -31,6 +37,7 @@ def DataBuilder():
 		
 		cur.execute('SELECT b.price, b.time_left, b.bid_date, b.hour, b.value, b.isGameplay, b.isVoucher, b.id FROM bid b')
 		allentries = cur.fetchall();
+		c = 0
 		for x in allentries:
 			price = x[0]
 			time_left  = x[1]
@@ -51,7 +58,15 @@ def DataBuilder():
 			count1min = GetNumAftertime(less1min,thisID,cur)
 			count5min =  GetNumAftertime(less5min,thisID,cur)
 			f.write(str(price) + " " )
-			sys.exit(1)
+			f.write(str(time_left) + " " )
+			f.write(str(calendar.timegm(bid_date.timetuple())) + " ")	
+			f.write(str(hour) + " " )
+			f.write(str(value) + " " )
+			f.write(str(isGameplay) + " " )
+			f.write(str(isVoucher) + "\n" )
+			y.write(str(IsWinningBid(thisID, price, cur)) + "\n")
+			print c," bids complete complete         \r",
+			c = c+1
 		f.close()
 		y.close()
 		con.close()
