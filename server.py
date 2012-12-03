@@ -44,7 +44,7 @@ if __name__ == "__main__":
 
                 arg = ""
                 for a in auctionInfo:
-                        arg = arg + str(a['id']) + ' "' + str(a['name']) + '" '
+                        arg = arg + str(a['id']) + ' \'' + str(a['name']) + '\' '
                         
                 f = str(time.time())+".txt"
                 print "Auction Request - Starting New Process"
