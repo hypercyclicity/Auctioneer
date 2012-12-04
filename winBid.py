@@ -31,8 +31,8 @@ def DataBuilder():
 	try:
 		secs10 = timedelta(seconds=10)
 		d = timedelta(seconds=10)
-		f = open('../data/winBidx.csv','w')
-		y = open('../data/winBidy.csv','w')
+		f = open('./data/winBidx.csv','w')
+		y = open('./data/winBidy.csv','w')
 		con = sqlite3.connect('auction.db')
 		cur = con.cursor()
 		cur.execute('SELECT SQLITE_VERSION()')
@@ -64,8 +64,6 @@ def DataBuilder():
 			
 			timeLast10Bids = 0
 			timeLast20Bids = 0
-			if price > 0.10:
-				timeLast10Bids = GetTimeForlastSoManyBids(price-.1,thisID,cur)
 			f.write(str(price) + " " )
 			f.write(str(time_left) + " " )
 			f.write(str(calendar.timegm(bid_date.timetuple())) + " ")	
@@ -74,7 +72,7 @@ def DataBuilder():
 			f.write(str(isGameplay) + " " )
 			f.write(str(isVoucher) + "\n" )
 			y.write(str(IsWinningBid(thisID, price, cur)) + "\n")
-		#	print c," bids complete complete         \r",
+			print c," bids complete complete         \r",
 			c = c+1
 		f.close()
 		y.close()
