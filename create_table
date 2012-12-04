@@ -2,4 +2,4 @@ CREATE TABLE bid (id char(25),name char(50), price float, user char(25),time_lef
 
 CREATE TABLE winner (id char(25), price float,numBids int,user char(25),  PRIMARY KEY (id));
 
-CREATE TABLE ratio (user char(25), w_l_ratio float, PRIMARY KEY (user));
+CREATE TABLE ratio (user char(25), totalWins int, numBids int, PRIMARY KEY (user));

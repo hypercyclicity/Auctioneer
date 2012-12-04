@@ -7,6 +7,7 @@ import time
 import sys
 import glob
 import os
+import GetRatio
 from optparse import OptionParser
             
 def adder(fileName):
@@ -122,7 +123,6 @@ if __name__ == "__main__":
     		print files 
     		adder(files)
     	RemoveBadData()
-    	addwinner()	
-
-
-
+    	addwinner()
+        GetRatio.addRatio()
+        
