@@ -8,8 +8,6 @@ import sys
 
 def addRatio():
 	try:
-		f = open('datax.csv','w')
-		y = open('datay.csv','w')
 		con = sqlite3.connect('auction.db')
 		cur = con.cursor()
 		cur.execute('SELECT SQLITE_VERSION()')
@@ -33,19 +31,12 @@ def addRatio():
 
                         numWins = cur.fetchone()[0]
 
-                        print user[0]
-                        print numBids
-                        print numWins
-
-                        ratio = numWins / numBids
-
                         try:
 				cur.execute("INSERT INTO ratio(user, totalWins, numBids) VALUES(?,?,?)",(user[0],numWins,numBids))
 			except sqlite3.Error, e:
 				print "Error Insert %s:" % e.args[0]
 				sys.exit(1)
 
-                f.close()
 		con.commit()
 		con.close()
 	except sqlite3.Error, e:
@@ -55,4 +46,3 @@ def addRatio():
     		
 if __name__ == "__main__":
         addRatio()
-	
