@@ -24,13 +24,16 @@ def DataBuilder():
 			cur.execute(query,id)
 			for row in cur:
 				for z in row:
+					print z
 					if z == 1:
 						try:
+							print "delete"
 							cur.execute("DELETE FROM bid  WHERE id == ?", id)
 							cur.execute("DELETE FROM winner  WHERE id == ?", id)
 						except sqlite3.Error, e:
 							print "Error Insert %s:" % e.args[0]
 							sys.exit(1)	
+		con.commit()
 		con.close()
 	except sqlite3.Error, e:
 		print "Error Select %s:" % e.args[0]
