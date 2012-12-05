@@ -10,15 +10,9 @@ import os
 import GetRatio
 from optparse import OptionParser
             
-def adder(fileName):
+def adder(fileName,con):
 	duplicates = 0
-	print fileName
 	try:
-		con = sqlite3.connect('auction.db')
-		cur = con.cursor()
-		cur.execute('SELECT SQLITE_VERSION()')
-		data = cur.fetchone()
-		print "SQLite version: %s" % data
 		f = open(fileName)
 		for line in f:
 			tokens = line.split("|$|")
@@ -51,20 +45,12 @@ def adder(fileName):
 						duplicates = duplicates + 1
 
 		f.close()
-		con.commit()
-		con.close()
 	except sqlite3.Error, e:
 		print "Error %s:" % e.args[0]
 		sys.exit(1)
 		
-def addwinner():
+def addwinner(con):
 	try:
-		con = sqlite3.connect('auction.db')
-		cur = con.cursor()
-		cur.execute('SELECT SQLITE_VERSION()')
-		data = cur.fetchone()
-		print "SQLite version: %s" % data
-		
 		cur.execute('SELECT b.id, max(b.price), b.user FROM bid b Group by b.id')
 		allentries = cur.fetchall();
 		for x in allentries:
@@ -81,48 +67,56 @@ def addwinner():
 					cur.execute("INSERT INTO winner(id,price,numBids,user) VALUES(?,?,?,?)"
 					,(winID,maxPrice,size,winUser))
 			except sqlite3.Error, e:
-				print "Error Insert %s:" % e.args[0]
-		con.commit()
-		con.close()
+				pass#print "Error Insert %s:" % e.args[0]
 	except sqlite3.Error, e:
 		print "Error Select 2 %s:" % e.args[0]
 		sys.exit(1)
 
-def RemoveBadData():
+def RemoveBadData(con):
 	try:
-		con = sqlite3.connect('auction.db')
-		cur = con.cursor()
-		cur.execute('SELECT SQLITE_VERSION()')
-		data = cur.fetchone()
-		print "SQLite version: %s" % data
-		
 		cur.execute('SELECT Distinct b.id FROM bid b')
 		allentries = cur.fetchall();
 		for x in allentries:
 			id = x
 			maxPrice = 0.0;
 		 	winID = "";
-			query = ("SELECT count(b.id) FROM bid b WHERE b.id == ? ")
+			query = ("SELECT count(b.id), max(b.price) FROM bid b WHERE b.id == ? ")
 			cur.execute(query,id)
 			for row in cur:
-				for z in row:
-					if z == 1:
-						try:
-							cur.execute("DELETE FROM bid  WHERE id == ?", id)
-							cur.execute("DELETE FROM winner  WHERE id == ?", id)
-						except sqlite3.Error, e:
-							print "Error Insert2 %s:" % e.args[0]
-							sys.exit(1)	
-		con.close()
+				entries = row[0]
+				bids = row[1] * 100
+					
+				if( bids != entries and bids != entries +1):
+					print "not keeping"
+					try:
+						cur.execute("DELETE FROM bid  WHERE id == ?", id)
+						cur.execute("DELETE FROM winner  WHERE id == ?", id)
+					except sqlite3.Error, e:
+						print "Error Insert2 %s:" % e.args[0]
+						sys.exit(1)
+				
+
 	except sqlite3.Error, e:
 		print "Error Select %s:" % e.args[0]
 		sys.exit(1)
 		    		
 if __name__ == "__main__":
-	for files in glob.glob("*.txt"):
-    		print files 
-    		adder(files)
-    	RemoveBadData()
-    	addwinner()
+	try:
+		con = sqlite3.connect('auction.db')
+		cur = con.cursor()
+		cur.execute('SELECT SQLITE_VERSION()')
+		data = cur.fetchone()
+		print "SQLite version: %s" % data
+		for files in glob.glob("*.txt"):
+    			adder(files,con)
+    		RemoveBadData(con)
+    		addwinner(con)
+    		con.commit()	
+		con.close()
+    	except sqlite3.Error, e:
+		print "Error Select %s:" % e.args[0]
+		sys.exit(1)
+        
         GetRatio.addRatio()
+        
         
