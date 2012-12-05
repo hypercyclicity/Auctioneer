@@ -13,7 +13,10 @@ def IsWinningBid(thisID, price, cur):
 	cur.execute('SELECT count(w.price) FROM winner w WHERE w.id == ? AND w.price ==?',(thisID,price))
 	x = cur.fetchall();
 	return x[0][0]
-
+def IsWinningUser(thisID, user, cur):
+	cur.execute('SELECT count(w.user) FROM winner w WHERE w.id == ? AND w.user==?',(thisID,user))
+	return cur.fetchall()[0][0];
+	
 def GetNumAftertime(time ,thisID, cur):
 	query = 'Select count(*) FROM bid b where b.bid_date > ? and b.id == ?' 
 	cur.execute(query, (time,thisID));
