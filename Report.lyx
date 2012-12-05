@@ -60,7 +60,7 @@
 \begin_body
 
 \begin_layout Title
-Penny Auction Prediction
+Predicting the Outcome of Online Penny Auctions Using Learning Algorithms
 \end_layout
 
 \begin_layout Author
@@ -71,30 +71,63 @@ Parsana Pillay, Stephen Rebstock, Stevan Clement
 December 5, 2012
 \end_layout
 
-\begin_layout Standard
-\begin_inset Newpage pagebreak
-\end_inset
-
-
+\begin_layout Abstract
+In this paper we investigate the application of learning algorithms to online
+ penny auctions for predicting the results of bids on low valued items such
+ as gift cards.
+ We first construct several methods to approach the issue of predicting
+ outcomes of bids and user strategies.
+ We then analyse the effectiveness of these methods using data collected
+ from a popular penny auction website, Quibids.
+ The relation between methods and their performance is discussed.
 \end_layout
 
 \begin_layout Section*
-Problem:
+Problem
+\end_layout
+
+\begin_layout Standard
+A penny auction is a type of auction where each participant pays a fixed
+ price in order to place an incremental bid on an item.
+ After each new bid is placed a timer is incremented by a specific amount
+ based on how long the auction has been going.
+ At the expiration of the timer the auction ends and the last participant
+ to bid is awarded the item for the current price.
+ This type of auction can be extremely profitable for the auctioneer as
+ they are paid both the final item fee and the fees from each bid placed
+ in the auction.
+ The incentive to participate in this type of auction is the chance to pay
+ a significantly lower amount than the retail price of an item.
 \end_layout
 
 \begin_layout Standard
 There are a number of penny auction sites on the web.
- The problem we face is how to win an auction with the lowest possible number
- of bids.
- With a penny auction the winning bid cost is only a fraction of the cost
- one would pay to win a bid.
- Each bid also has a cost.
- Thus the total cost is (total bids * bid fee) + item cost + additional
- charges.
+ We choose the popular Quibids site to collect our data from.
+ On Quibids each bid costs 0.01 USD and The problem we face is how to win
+ an auction through the lowest possible number of bids.
+ In this type of auction the final item price is only a fraction of the
+ total amount the winner must pay, denoted by 
+\begin_inset Formula 
+\[
+\mathtt{cost=(totalBids}*\mathtt{biddingFee)+finalItemCost+additionalCharges}
+\]
+
+\end_inset
+
+Each of the other particpants must pay for the bids they placed, even though
+ they lost the auction and gained nothing.
+ In this project we try various methods to predict when an auction is ending
+ and a winning bid will occur.
 \end_layout
 
 \begin_layout Section*
-Related Work:
+Literature Survey
+\end_layout
+
+\begin_layout Standard
+Although online auctions are mentioned extensively in the literature, there
+ are few papers addressing the specific problem of online penny auctions,
+ a particular subset of bidding fee auctions.
 \end_layout
 
 \end_body
