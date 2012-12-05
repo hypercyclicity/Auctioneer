@@ -22,12 +22,19 @@ class Server:
 
 	def launchProgram(self,prog = "client.py",args=[],file_name = "test1.txt"):
 		prog = prog+" " +args
-		subprocess.call(["ssh",self.hosts[self.counter], "python " + os.getenv('REPO_PATH') + prog +" > " + os.getenv('DB_PATH') + file_name])
+		subprocess.call(["ssh",self.hosts[self.counter], "python /home/dsk03/ugrad/sar7/466/project/Auctioneer/"+ prog +" > /home/dsk03/ugrad/sar7/466/project/data/"+ file_name])
 		self.counter = (self.counter +1)% self.max
 
+	def kill_all(self):
+		for x in range(1,22):
+			rtn = subprocess.call(["ssh",self.hosts[self.counter],"pkill","python"])
+			print ["ssh",self.hosts[self.counter],"pkill","python"]
+			print rtn
+			self.counter = (self.counter +1)% self.max
+	
 if __name__ == "__main__":
         s = Server()
-
+	s.kill_all()
         pageNum = 4
         auctionInterval = 60*5
         oldAuctionList = []
