@@ -103,8 +103,10 @@ A penny auction is a type of auction where each participant pays a fixed
 \begin_layout Standard
 There are a number of penny auction sites on the web.
  We choose the popular Quibids site to collect our data from.
- On Quibids each bid costs 0.01 USD and The problem we face is how to win
- an auction through the lowest possible number of bids.
+ On Quibids each bid costs 0.60 USD and increments the total price by 0.01
+ USD.
+ The problem we face is how to win an auction using the lowest possible
+ number of bids.
  In this type of auction the final item price is only a fraction of the
  total amount the winner must pay, denoted by 
 \begin_inset Formula 
@@ -116,8 +118,8 @@ There are a number of penny auction sites on the web.
 
 Each of the other particpants must pay for the bids they placed, even though
  they lost the auction and gained nothing.
- In this project we try various methods to predict when an auction is ending
- and a winning bid will occur.
+ In this project we try to solve this problem using various methods to predict
+ when an auction is ending and a winning bid will occur.
 \end_layout
 
 \begin_layout Section*
@@ -128,6 +130,47 @@ Literature Survey
 Although online auctions are mentioned extensively in the literature, there
  are few papers addressing the specific problem of online penny auctions,
  a particular subset of bidding fee auctions.
+ The earliest mention of the bidding fee auction model occurs in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Shubik:1971"
+
+\end_inset
+
+ where two bidders are set against each other in order to gain a one dollar
+ bill.
+ They must both pay whatever they bid, and the winner is given one dollar.
+ The article explains how this process ends in a war of attrition resulting
+ in participants making irrational decisions and an overall large profit
+ for the auctioneer.
+ A more recent paper 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Hinnosaar:2010"
+
+\end_inset
+
+ attempts to model penny auctions and declares them to be unpredictable
+ due to high variance of outcomes and with unbounded revenue to the seller.
+\end_layout
+
+\begin_layout Section*
+Approach
+\end_layout
+
+\begin_layout Standard
+The approach section.
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+bibfiles "references"
+options "plain"
+
+\end_inset
+
+
 \end_layout
 
 \end_body
