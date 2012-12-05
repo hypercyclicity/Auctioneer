@@ -1,10 +1,10 @@
 function [lambda,b] = dual_hardmargin(K,y,beta)
 
-[t n] = size(K);
+[t,~] = size(K);
 
 I = eye(t);
 
-H = [diag(y)*K*diag(y)];
+H = diag(y)*K*diag(y);
 
 f = -ones(t, 1);
 
@@ -25,7 +25,7 @@ H = H + 1e-15*eye(t);
 
 [lambda] = quadprog(H, f, A, b_qp, [], [], 1, [], [], options);
 
-[max_val row] = max(lambda);
+[~,row] = max(lambda);
 
 b = (K(row, :) * diag(y) * lambda) - (1 / y(row));
 
