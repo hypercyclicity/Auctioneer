@@ -40,18 +40,25 @@ def DataBuilder():
 			isGameplay = x[5]
 			isVoucher = x[6]
 			thisID = x[7]
+			
 			less10secs = bid_date - timedelta(seconds=10)
 			less1min   = bid_date - timedelta(seconds=60)
 			less5min   = bid_date - timedelta(minutes = 5)
+			
 			count10secs = Util.GetNumAftertime(less10secs,thisID,cur)
 			count1min = Util.GetNumAftertime(less1min,thisID,cur)
 			count5min =  Util.GetNumAftertime(less5min,thisID,cur)
-			
-			timeLast10Bids = 0
-			timeLast20Bids = 0
+			time = calendar.timegm(bid_date.timetuple())
+			timeSinceLast = Util.GetTimeSinceLastBid(price, thisID, time, cur)
+
 			f.write(str(price) + " " )
 			f.write(str(time_left) + " " )
-			f.write(str(calendar.timegm(bid_date.timetuple())) + " ")	
+			f.write(str(time) + " ")
+			f.write(str(timeSinceLast) + " ")
+			f.write(str(count10secs) + " ")
+			f.write(str(count1min) + " ")
+			f.write(str(count5min) + " ")
+			f.write(str(timeSinceLast))	
 			f.write(str(hour) + " " )
 			f.write(str(value) + " " )
 			f.write(str(isGameplay) + " " )
