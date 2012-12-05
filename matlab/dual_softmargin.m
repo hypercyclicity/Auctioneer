@@ -1,6 +1,6 @@
 function [lambda,b] = dual_softmargin(K,y,beta)
 
-[t n] = size(K);
+[t ~] = size(K);
 
 I = eye(t);
 
