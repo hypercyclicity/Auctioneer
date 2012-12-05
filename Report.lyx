@@ -72,9 +72,9 @@ December 5, 2012
 \end_layout
 
 \begin_layout Abstract
-In this paper we investigate the application of learning algorithms to online
- penny auctions for predicting the results of bids on low valued items such
- as gift cards.
+In this report we investigate the application of learning algorithms to
+ online penny auctions for predicting the results of bids on low valued
+ items such as gift cards.
  We first construct several methods to approach the issue of predicting
  outcomes of bids and user strategies.
  We then analyse the effectiveness of these methods using data collected
@@ -102,7 +102,17 @@ A penny auction is a type of auction where each participant pays a fixed
 
 \begin_layout Standard
 There are a number of penny auction sites on the web.
- We choose the popular Quibids site to collect our data from.
+ We choose the popular Quibids
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+http://quibids.com/
+\end_layout
+
+\end_inset
+
+ site to collect our data from.
  On Quibids each bid costs 0.60 USD and increments the total price by 0.01
  USD.
  The problem we face is how to win an auction using the lowest possible
@@ -116,10 +126,10 @@ There are a number of penny auction sites on the web.
 
 \end_inset
 
-Each of the other particpants must pay for the bids they placed, even though
+Each of the other participants must pay for the bids they placed, even though
  they lost the auction and gained nothing.
  In this project we try to solve this problem using various methods to predict
- when an auction is ending and a winning bid will occur.
+ when an auction is ending and a when winning bid will occur.
 \end_layout
 
 \begin_layout Section*
@@ -151,15 +161,115 @@ key "Hinnosaar:2010"
 \end_inset
 
  attempts to model penny auctions and declares them to be unpredictable
- due to high variance of outcomes and with unbounded revenue to the seller.
+ due to high variance of outcomes and unbounded revenue to the seller.
 \end_layout
 
 \begin_layout Section*
-Approach
+Approach and Rationale
 \end_layout
 
 \begin_layout Standard
-The approach section.
+The problem of predicting when to place a bid such that it will be winning
+ is a difficult one to approach.
+ After reviewing the literature we decided that it was possible to predict
+ the end with some degree of accuracy above random chance.
+ Collecting the data and manipulating it took the majority of the time as
+ we were unable to locate any free data sets for sites dealing with penny
+ auctions.
+ We wrote our own scraping programs to gather data from the website Quibids
+ Insider
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+http://quibidsinsider.com/
+\end_layout
+
+\end_inset
+
+ because it allowed us to access auctions from the American version of Quibids,
+ featuring far more auctions than the Canadian site, without using a proxy
+ server.
+ Our programs were distributed throughout the undergraduate laboratories
+ and operated using requests mimicking the original site's AJAX functionality
+ to reduce the site load while collecting data.
+\end_layout
+
+\begin_layout Standard
+Our approach to predicting when a win would occur was heavily influenced
+ by the methods developed in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "JStix:2012"
+
+\end_inset
+
+.
+ This paper also gave us hope that this was an approachable problem.
+ This paper describes three algorithms to mimic the strategies of real bidders
+ in an auction.
+\end_layout
+
+\begin_layout Section*
+Plan
+\end_layout
+
+\begin_layout Standard
+Our goal for this project is to show that penny auctions have enough structure
+ for use in a learning algorithm to be able to make decent predictions on
+ auction outcomes.
+ The following hypotheses were constructed with this in mind.
+\end_layout
+
+\begin_layout Subsection*
+Hypotheses
+\end_layout
+
+\begin_layout Itemize
+Given a bid, it is possible to predict whether this will be a winning bid.
+\end_layout
+
+\begin_layout Itemize
+Given n bids, it is possible to predict whether the next bid will be a winning
+ bid.
+\end_layout
+
+\begin_layout Itemize
+Given a user in an auction, it is possible to predict whether this user
+ will win.
+\end_layout
+
+\begin_layout Subsection*
+Experimental Design
+\end_layout
+
+\begin_layout Standard
+What we were thinking.
+\end_layout
+
+\begin_layout Section*
+Results
+\end_layout
+
+\begin_layout Standard
+What we found.
+\end_layout
+
+\begin_layout Section*
+Evaluation
+\end_layout
+
+\begin_layout Standard
+What we think it means.
+\end_layout
+
+\begin_layout Section*
+Conclusion
+\end_layout
+
+\begin_layout Standard
+Machine learning is fun! Not crashing web sites while scraping their data
+ is a Good Thing.
 \end_layout
 
 \begin_layout Standard
