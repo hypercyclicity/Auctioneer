@@ -14,9 +14,11 @@ import Util
 
 def DataBuilder():
 	try:
+		sep = ","
 		secs10 = timedelta(seconds=10)
 		d = timedelta(seconds=10)
 		f = open('./data/winBidx.csv','w')
+		f.write("prince,time_left,time,dif_time,count10secs,count1min,count5min,hour,value,gameplay,isVoucher,y\n")
 		y = open('./data/winBidy.csv','w')
 		con = sqlite3.connect('auction.db')
 		cur = con.cursor()
@@ -51,21 +53,32 @@ def DataBuilder():
 			time = calendar.timegm(bid_date.timetuple())
 			timeSinceLast = Util.GetTimeSinceLastBid(price, thisID, time, cur)
 
-			f.write(str(price) + " " )
-			f.write(str(time_left) + " " )
-			f.write(str(time) + " ")
-			f.write(str(timeSinceLast) + " ")
-			f.write(str(count10secs) + " ")
-			f.write(str(count1min) + " ")
-			f.write(str(count5min) + " ")
-			f.write(str(timeSinceLast))	
-			f.write(str(hour) + " " )
-			f.write(str(value) + " " )
-			f.write(str(isGameplay) + " " )
-			f.write(str(isVoucher) + "\n" )
-			y.write(str(Util.IsWinningBid(thisID, price, cur)) + "\n")
+			f.write(str(price) + sep )
+			f.write(str(time_left) +sep )
+			f.write(str(time) + sep)
+			f.write(str(timeSinceLast) + sep)
+			f.write(str(count10secs) + sep)
+			f.write(str(count1min) + sep)
+			f.write(str(count5min) + sep)
+			f.write(str(hour) + sep)
+			f.write(str(value) + sep )
+			if isGameplay == 1:
+				f.write("isGameplay" + sep )
+			else:
+				f.write("notGameplay" + sep )
+			if isVoucher == 1:
+				f.write("is_voucher" + sep )
+			else:
+				f.write("not_voucher" + sep)
+			winning = Util.IsWinningBid(thisID, price, cur)
+			if winning == 1:
+				f.write("won\n" )
+			else:
+				f.write("lost\n" )
 			print c," bids complete complete         \r",
 			c = c+1
+			if c == 200:
+				break
 		f.close()
 		y.close()
 		con.close()
