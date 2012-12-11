@@ -14,8 +14,8 @@ def DataBuilder():
 	try:
 		secs10 = timedelta(seconds=10)
 		d = timedelta(seconds=10)
-		f = open('./data/winningUserx.csv','w')
-		y = open('./data/winningUsery.csv','w')
+		f = open('./data/winningUserX.csv','w')
+		y = open('./data/winningUserY.csv','w')
 		con = sqlite3.connect('auction.db')
 		cur = con.cursor()
 		cur.execute('SELECT SQLITE_VERSION()')
@@ -37,36 +37,41 @@ def DataBuilder():
 			cur.execute('SELECT distinct b.user FROM bid b WHERE b.id == ?',(ID,))
 			allusers = cur.fetchall();
 			for use in allusers:
-				cur.execute('SELECT count(*) FROM bid b WHERE b.id == ? AND 					user == ?', (ID,use[0]))
-				totalUserBids = cur.fetchall()[0][0];
-				minbiddate = Util.GetMindate(ID,use[0], cur)
-				maxbiddate = Util.GetMaxdate(ID,use[0], cur)
-				if totalUserBids != 1:
-					aveTimeBetweenBids = (maxbiddate - minbiddate)/(totalUserBids-1)
-				else:
-					aveTimeBetweenBids =0				
-
-			f.write(str(totalbids) + " " )
-			f.write(str(value) + " " )
-			f.write(str(hour) + " ")	
-			f.write(str(hour) + " " )
-			f.write(str(value) + " " )
-			f.write(str(isGameplay) + " " )
-			f.write(str(isVoucher) + "\n" )
-			f.write(str(totalUserBids) + "\n" )
-			f.write(str(minbiddate) + "\n" )
-			f.write(str(maxbiddate) + "\n" )
-			f.write(str(aveTimeBetweenBids) + "\n" )
-			y.write(str(Util.IsWinningUser(ID, use[0], cur)) + "\n")
-			print c," bids complete complete         \r",
-			c = c+1
+				winning = Util.IsWinningUser(ID, use[0], cur)
+				if (c < 1100 or winning == 1):
+					cur.execute('SELECT count(*) FROM bid b WHERE b.id == ? AND 					user == ?', (ID,use[0]))
+					totalUserBids = cur.fetchall()[0][0];
+					minbiddate = Util.GetMindate(ID,use[0], cur)
+					maxbiddate = Util.GetMaxdate(ID,use[0], cur)
+					if totalUserBids != 1:
+						aveTimeBetweenBids = (maxbiddate - minbiddate)/(totalUserBids-1)
+					else:
+						aveTimeBetweenBids =0				
+				
+					f.write(str(totalbids) + " " )
+					f.write(str(value) + " " )
+					f.write(str(hour) + " ")	
+					f.write(str(hour) + " " )
+					f.write(str(value) + " " )
+					f.write(str(isGameplay) + " " )
+					f.write(str(isVoucher) + "\n" )
+					f.write(str(totalUserBids) + "\n" )
+					f.write(str(minbiddate) + "\n" )
+					f.write(str(maxbiddate) + "\n" )
+					f.write(str(aveTimeBetweenBids) + "\n" )
+					y.write(str(winning) + "\n")
+					print c," bids complete complete         \r",
+					c = c+1
+					if c >= 2000:
+						break
+			if c >= 2000:
+				break
 		f.close()
 		y.close()
 		con.close()
 	except sqlite3.Error, e:
 		print "Error %s:" % e.args[0]
 		sys.exit(1)
-		
     		
 if __name__ == "__main__":
 	DataBuilder()
