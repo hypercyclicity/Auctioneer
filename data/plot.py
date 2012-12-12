@@ -11,13 +11,15 @@ if __name__ == "__main__":
 	csv = sys.argv[1]
 	data = np.loadtxt(open(csv,"rb"),delimiter=" ",skiprows=1)
 
+	f = open(csv,'r+')
+	labels = f.readlines()[0].split(" ")
 	x = data[:,0]
 	y = data[:,1]
 	Z1 = data[:,2]
 	Z2 = data[:,3]
 
-	z = np.multiply(Z1,Z2)
-
+	z = np.sqrt(np.multiply(Z1,Z2))
+	
 	xi = np.linspace(min(x), max(x))
 	yi = np.linspace(min(y), max(y))
 
@@ -33,9 +35,9 @@ if __name__ == "__main__":
 
 	ax.set_zlim3d(np.min(Z), np.max(Z))
 
-	ax.set_xlabel('Ratio of weight penalties \n Missprediction of ')
-	ax.set_ylabel('Regularization constant')
-	ax.set_zlabel('Geometric mean of errors')
+	ax.set_xlabel(labels[0])
+	ax.set_ylabel(labels[1])
+	ax.set_zlabel("Geometric mean of errors")
 
 	fig.colorbar(surf)
 
