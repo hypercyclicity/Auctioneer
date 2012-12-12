@@ -406,7 +406,19 @@ http://quibidsinsider.com/
 \begin_layout Standard
 Once the data had been acquired we manipulated it further to extract and
  expand features to create data sets for each of our hypotheses.
- We tried to mimic the strategies of real bidders in an auction.
+ This expansion is discussed below in the Experimental Design.
+ As we were testing to see whether or not we could successful prediction
+ results from penny auction data, a lot of our approach was the tests we
+ used in our experiments.
+\end_layout
+
+\begin_layout Standard
+We picked our hypotheses based on what data we considered useful for winning
+ auctions.
+ The main points covered are: if a next bid will win, if a user will win,
+ and what the end price of the auction will be.
+ If we can successfully predict these points, building a bot to win auctions
+ would be a possible next step.
 \end_layout
 
 \begin_layout Section*
@@ -424,14 +436,14 @@ Our goal for this project is to show that penny auctions have enough structure
 Hypotheses
 \end_layout
 
-\begin_layout Itemize
+\begin_layout Enumerate
 Given n bids, it is possible to predict whether the next bid will be a winning
  or losing bid.
  We are testing whether a bid history can provide a recognizable ending
  or continuing pattern for an auction.
 \end_layout
 
-\begin_layout Itemize
+\begin_layout Enumerate
 Given a user in an auction, it is possible to predict whether this user
  will win.
  Users with specific bidding behaviours are more likely to win than others.
@@ -439,11 +451,11 @@ Given a user in an auction, it is possible to predict whether this user
  bid believing someone else will bid.
 \end_layout
 
-\begin_layout Itemize
+\begin_layout Enumerate
 Given a particular auction state, it is possible to predict the end price
  of the auction.
- This is similar to the first hypothesis, but will use regression instead
- of classification to get more complete information about the final price.
+ This is similar to the first hypothesis, but uses regression instead of
+ classification for more complete information about the final price.
 \end_layout
 
 \begin_layout Subsection*
@@ -451,11 +463,64 @@ Experimental Design
 \end_layout
 
 \begin_layout Standard
-We used Mlpy to provide a framework for testing our hypotheses.
+We used Mlpy 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "DBLP:journals/corr/abs-1202-6548"
+
+\end_inset
+
+ to provide a framework for testing our hypotheses.
  Mlpy is an open source machine learning library written in Python providing
  functionality for regression, classification, and clustering which allowed
  us to run a variety of algorithms against our data sets.
- Our first two hypotheses were tested using the following included functions
+ Making decisions about feature extraction and engineering was going to
+ be an important part of getting decent results.
+ The following features were used for each hypothesis:
+\end_layout
+
+\begin_layout Enumerate
+For our X matrix we populated the row of features with a history of the
+ previous 9 bids.
+ Each bid included information about price at the time of the bid, amount
+ of time left in the auction timer when the bid was placed, the time and
+ date of the bid (auction sites are more popular at certain points in the
+ day), the hour of the bid, the value of the item (we used only voucher
+ bids and gift cards, so we could easily tell the value based on the item's
+ name), whether or not it is a gameplay (some auctions have a gameplay feature
+ to allow the auction winner to win extra bids), whether or not the item
+ is a voucher bid, the number of bids in the last {5, 1, 1/6} minutes, and
+ the time since the last bid.
+ Our Y matrix was a binary classification matrix of whether or not the bid
+ after those 9 bids won the auction.
+\end_layout
+
+\begin_layout Enumerate
+For our X matrix we populated the row of features with the total bids a
+ user had made in an auction, the value of the item, the hour of the auction,
+ whether or not it is a gameplay, whether or not the item is a voucher bid,
+ the total bids a user had made on all auctions in our database, when the
+ user started bidding in an auction, when the user had finished bidding
+ in an auction, and their average time between bids.
+ Our Y matrix was a binary classification matrixof whether or not a user
+ won the auction.
+\end_layout
+
+\begin_layout Enumerate
+Using the same features as the first hypothesis we created an X matrix of
+ a bid history of 9 bids.
+ Our Y matrix was a matrix of final auction prices.
+\end_layout
+
+\begin_layout Standard
+We first created a database of all our auction information.
+ We had collected 30240 bids spanning 2421 auctions with 4551 different
+ users.
+ Each of our test matrices included 2000 random examples from this dataset.
+\end_layout
+
+\begin_layout Standard
+Our first two hypotheses were tested using the following included functions
  for classification:
 \end_layout
 
@@ -472,6 +537,8 @@ key "LIBLINEAR"
 \end_inset
 
  different solvers.
+ We also use the weight functionality to assign higher weights to winning
+ bids in an attempt to separate their importance from non-winning bids.
 \end_layout
 
 \begin_layout Itemize
@@ -479,7 +546,7 @@ key "LIBLINEAR"
 \series bold
 k-means
 \series default
- uses iterative partioning to seperate data into 
+ uses iterative partitioning to separate data into 
 \shape italic
 k
 \shape default
@@ -489,26 +556,31 @@ k
 \begin_layout Itemize
 
 \series bold
-Classification Tree
+Classification Trees
 \series default
- - 
+ are a type of decision tree learning based on predicting a class to which
+ a piece of data belongs.
+ This works by splitting the data into a tree model based on recursive partition
+ing.
 \end_layout
 
 \begin_layout Itemize
 
 \series bold
-Kernel Fisher Discriminant Classifier
+Kernel Fisher Discriminant Classification
 \series default
- - polynomial kernel, Gaussian Kernel
+ was the only kernel method we used.
+ It is a kernelized version of linear discriminant analysis.
+ Both Polynomial kernels and Gaussian kernels were tested.
 \end_layout
 
 \begin_layout Itemize
 
 \series bold
-Maximum Likelihood Classifier
+Maximum Likelihood Classification
 \series default
- - Unfortunately this caused a memory error on our data sets while using
- the undergraduate machines.
+ calculates a Bayesian probability function which judges how likely a piece
+ of data is to belong to a certain class.
 \end_layout
 
 \begin_layout Standard
@@ -520,7 +592,7 @@ On the third hypothesis we used the following tests for regression:
 \series bold
 Ordinary Least Squares
 \series default
- - 
+ minimizes the sum of the squares of the errors to fit a hyperplane to data.
 \end_layout
 
 \begin_layout Itemize
@@ -528,7 +600,7 @@ Ordinary Least Squares
 \series bold
 Ridge Regression
 \series default
- - 
+ is like least squares except it penalizes the size of regression coefficients.
 \end_layout
 
 \begin_layout Itemize
@@ -536,34 +608,12 @@ Ridge Regression
 \series bold
 Partial Least Squares
 \series default
- - 
-\end_layout
-
-\begin_layout Itemize
-
-\series bold
-Last Angle Regression (LARS)
-\series default
- -
-\end_layout
-
-\begin_layout Itemize
-
-\series bold
-Elastic Net
-\series default
- - 
+ is similar to least squares except it is better against noisy data sets
+ as the data is first decomposed into a lower dimensional space.
 \end_layout
 
 \begin_layout Section*
 Results
-\end_layout
-
-\begin_layout Standard
-What we found.
- Vouchers bids, having the least emotional attachment during bidding (you
- don't get to take anything home), yielded much better prediction results
- than their material counterparts such as gift cards.
 \end_layout
 
 \begin_layout Section*
@@ -590,17 +640,22 @@ Over the course of the project a lot of knowledge was gained about the problem
 We learned a lot about scraping web sites for content.
  We initially ran into some trouble with placing too much load on the site
  we were scraping and were contacted by its web hosting company.
- After we reduced and distributed the amount of requests we had no further
- problems parsing.
+ After that we rewrote our code to reduce and distribute the amount of requests
+ we were making and had no further problems gathering our data.
 \end_layout
 
 \begin_layout Standard
 We had some ideas for further work on the topic.
  It would be interesting to extend upon our project using the information
- we gathered to create a classifaction algorithm, classifying different
- users to decide whether it is worth it to bid against the remaining bidders.
- We didn't have a chance to try our predictions in the wild due to time
- and money constraints.
+ we gathered to create a classification algorithm.
+ This would allow us to classifying different users to decide whether it
+ is worth it to bid against the remaining bidders.
+ 
+\end_layout
+
+\begin_layout Standard
+We didn't have a chance to try our predictions in the wild due to time and
+ money constraints, but this would have been fun.
 \end_layout
 
 \begin_layout Standard
