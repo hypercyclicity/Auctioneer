@@ -46,7 +46,7 @@ def main(xfile,yfile,algorithm=""):
     ytrain =  y[0:tr_size]
     ytest = y[tr_size:(tr_size+te_size)]
     
-    algorithms = ['l1r_lr']
+    algorithms = ['l1r_l2loss_svc']
     for algorithm in algorithms:
     	print algorithm
 	ftest = open(str(algorithm) +'_Test.csv','w')
@@ -56,7 +56,7 @@ def main(xfile,yfile,algorithm=""):
         for i in range(1,10):
 	    for b in range(1,20):
 	    	
-            	beta = .2 + .1*b
+            	beta = 0 + .1*b
             	w={0:1, 1:(+i*.5)}
             	solver = mlpy.LibLinear(solver_type=algorithm, C=beta, eps=0.01, weight=w)
             	solver.learn(xtrain, ytrain)         
@@ -68,22 +68,6 @@ def main(xfile,yfile,algorithm=""):
             	printStats(ytest,yhat,algorithm,.0+i*.2,beta,"test errors", ftest)
 	ftest.close()
 	ftrain.close()
-        
-
-    ftest = open("Classification" +'_Test.csv','w')
-    print "Class"
-    ftrain = open("Classification"+'_Train.csv','w')
-    ftest.write("Weight beta Accuracy_on_winning_bids Accuracy_on_nonwinning_bids\n")
-    ftrain.write("Weight beta Accuracy_on_winning_bids Accuracy_on_nonwinning_bids\n")    
-    solver = mlpy.ClassTree()
-    solver.learn(xtrain, ytrain)         
-    yhat = solver.pred(xtrain)
-    printStats(ytrain,yhat,"Classification Tree","none","none","train errors", ftrain)
-    yhat = solver.pred(xtest)
-    printStats(ytest,yhat,"Classification Tree","none","none","test errors", ftest)
-    ftest.close()
-    ftrain.close()
-  
 
 if __name__ == "__main__":
     xfile = sys.argv[1]
