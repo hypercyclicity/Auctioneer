@@ -25,6 +25,7 @@ def DataBuilder():
 		cur.execute('SELECT distinct  b.id FROM bid b')
 		allentries = cur.fetchall();
 		c = 0
+		step = 0
 		for x in allentries:
 			ID = x[0]
 			cur.execute('SELECT count(*), min(b.value), min(b.hour), min(b.isGameplay), min(b.isVoucher) FROM bid b WHERE b.id ==?',(ID,));
@@ -37,8 +38,9 @@ def DataBuilder():
 			cur.execute('SELECT distinct b.user FROM bid b WHERE b.id == ?',(ID,))
 			allusers = cur.fetchall();
 			for use in allusers:
+				step = step + 1
 				winning = Util.IsWinningUser(ID, use[0], cur)
-				if (c < 1100 or winning == 1):
+				if ((step%8 == 0 and c < 2000) or (step%5 == 0 and winning == 1 )):
 					cur.execute('SELECT count(*) FROM bid b WHERE b.id == ? AND 					user == ?', (ID,use[0]))
 					totalUserBids = cur.fetchall()[0][0];
 					minbiddate = calendar.timegm(Util.GetMindate(ID,use[0], cur).timetuple())

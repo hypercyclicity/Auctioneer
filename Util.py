@@ -9,6 +9,10 @@ from datetime import timedelta
 from datetime import datetime
 import calendar
 
+def GetWinningPrice(thisID,cur):
+	cur.execute('SELECT w.price FROM winner w WHERE w.id == ?',(thisID))
+	return cur.fetchall()[0][0]
+	
 def IsWinningBid(thisID, price, cur):
 	cur.execute('SELECT count(w.price) FROM winner w WHERE w.id == ? AND w.price ==?',(thisID,price))
 	x = cur.fetchall();
