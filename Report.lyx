@@ -68,13 +68,13 @@ Parsana Pillay, Stephen Rebstock, Stevan Clement
 \end_layout
 
 \begin_layout Date
-December 5, 2012
+December 13, 2012
 \end_layout
 
 \begin_layout Abstract
 In this report we investigate the application of learning algorithms to
  online penny auctions for predicting the results of bids on low valued
- items such as gift cards.
+ items such as gift cards and voucher bids.
  We first construct several methods to approach the issue of predicting
  outcomes of bids and user strategies.
  We then analyse the effectiveness of these methods using data collected
@@ -128,7 +128,38 @@ http://quibids.com/
 
 Each of the other participants must pay for the bids they placed, even though
  they lost the auction and gained nothing.
- In this project we try to solve this problem using various methods to predict
+ 
+\end_layout
+
+\begin_layout Standard
+There are a few other factors for the special case of Quibids auctions.
+ There is a shipping cost of 9.50 USD and a transaction fee of 1.99 USD.
+ The main difference between Quibids and other penny auction sites, such
+ as the former top auction site Swoopo
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+http://www.swoopo.com/
+\end_layout
+
+\end_inset
+
+, is the buy it now feature included on Quibids.
+ When using this feature you can use the amount you paid for all the bids
+ you have placed in a particular auction to pay the cost of the item.
+ The price Quibids sets for items tends to be higher than in shopping sites
+ or department stores.
+ Additionally, the winner must pay the shipping and transaction fees.
+ Quibids sets limits to the number of auctions you can win in a month and
+ places a cap on the dollar amount of your total winnings.
+ There is also a time limit on claiming your price.
+ Thus a winner of an auction who does not claim their prize within a week
+ loses all the money they spent on the auction.
+\end_layout
+
+\begin_layout Standard
+In this project we try to solve this problem using various methods to predict
  when an auction is ending and a when winning bid will occur.
 \end_layout
 
@@ -140,7 +171,28 @@ Literature Survey
 Although online auctions are mentioned extensively in the literature, there
  are few papers addressing the specific problem of online penny auctions,
  a particular subset of bidding fee auctions.
- The earliest mention of the bidding fee auction model occurs in 
+ Bidding fee auctions are a type of English auction, where the price increases
+ and each the identity of each bidder is disclosed to all other bidders.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Coppinger:1980"
+
+\end_inset
+
+ looks at the performance of three different auctions.
+ Dutch auctions, where bidding starts at the highest possible price which
+ then decreases until someone bids, at which point the item is sold, a sealed
+ bid auction, where everyone submits a sealed price and the highest price
+ wins, and English auctions.
+ The English Auction, the only auction where people bid against one another
+ in a competitive manner, results in prices at or above the optimal price
+ of the item.
+ The other two auction types result in prices at or below the optimal value.
+\end_layout
+
+\begin_layout Standard
+The earliest mention of the bidding fee auction model occurs in 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "Shubik:1971"
@@ -162,6 +214,162 @@ key "Hinnosaar:2010"
 
  attempts to model penny auctions and declares them to be unpredictable
  due to high variance of outcomes and unbounded revenue to the seller.
+ In 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Mittal:2010"
+
+\end_inset
+
+ it is shown that although we cannot predict user strategy, as it is too
+ random for game theory, it is possible to predict profit from auctions.
+ User strategy is mentioned again in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Caldara:2010"
+
+\end_inset
+
+, outlining that bidding strategies of each user involved in the auction
+ affect the result of the auction.
+ There are bidders who act irrationally and aggressive in the auctions and
+ inexperienced bidders who drop out too quickly.
+ The paper finishes by stating that auctions where the majority of users
+ employ sophisticated strategies are far more predictable than those with
+ irrational or novice strategies.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Wang:2012"
+
+\end_inset
+
+ remarks that novice users often radically overbid, but retained users often
+ learn quickly and begin to exploit penny auctions.
+ A penny auction site's survival then relies on attracting new inexperienced
+ bidders who will lose money.
+ This paper remarks that the key to learning understanding penny auctions
+ is to focus on learning and strategic sophistication done by bidders.
+ However, while focusing on the economics 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "EStix:2012"
+
+\end_inset
+
+ finds that for Quibids, most of the sites earnings come from experienced
+ bidders.
+ Quibids makes money due to the auctioning of its voucher bids, which we
+ plan to study in this paper.
+\end_layout
+
+\begin_layout Standard
+Bidding strategies are again mentioned in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "JStix:2012"
+
+\end_inset
+
+.
+ This study shows that 88% of auctions are won bidders whose strategy is
+ to bid persistently throughout the auction.
+ There are two types of persistent bidders: bidders who constantly bid during
+ their time participating in an auction and bidders who alternate between
+ constantly bidding and infrequently bidding as the auction goes on.
+ Auctions usually end on average 30 bids after the last persistent bidder
+ has left or with the last persistent bidder winning.
+ Another important point is that 60% of auctions had the following pattern
+ in the last 10 bids: a single bid at almost 0 seconds and a number of bids
+ immediatly following that single bid.
+\end_layout
+
+\begin_layout Standard
+Other auction sites are discussed in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Ockenfels:2002"
+
+\end_inset
+
+.
+ Specifically, user strategy based on bid timing for Amazon and eBay.
+ As auction experience is gained by a bidder on these sites incremental
+ bidding decreases and last minute bidding, known as auction sniping, increases.
+ This has the effect of changing these sites into sealed bid auctions.
+ If everyone submits a bid last minute, the highest bid will win and it
+ will be impossible to react to another user’s bid.
+ Quibids avoids this problem by increasing the auction clock after every
+ bid.
+\end_layout
+
+\begin_layout Standard
+End auction prices on the now bankrupt site Swoopo are discussed in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Nanney:2010"
+
+\end_inset
+
+ where game theory is used to determine a geometric distribution of penny
+ auction end points that give a specific value for an auction item.
+ Quibids Reports
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+http://www.quibidsreport.com/
+\end_layout
+
+\end_inset
+
+, a subscription based service, shows a similar distribution for auction
+ endings.
+\end_layout
+
+\begin_layout Standard
+The most cited paper on penny auctions 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Augenblick:2009"
+
+\end_inset
+
+ also discusses Swoopo.
+ The paper notes that bidder experience is most important for minimizing
+ expected loss.
+ Despite the extremely lucrative appearance of penny auction for an auction
+ host, it turns out that half of the auctions result in a loss for the auction
+ site, due to the total price of the item plus all revenue from the bids
+ often being less than the cost of the item.
+ However, an auction site still makes an average profit of 50% of the item
+ cost on all items.
+ The paper points out that the end price of an auction is a function of
+ the total number of users and total number of active auctions.
+\end_layout
+
+\begin_layout Standard
+End prices of standard auctions are predicted in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Ghani:2004"
+
+\end_inset
+
+, and although penny auctions are very different from English auctions,
+ also known as an open ascending price auctions, some of the features used
+ in the analysis for this paper looked promising for penny auctions.
+ Notably, the use of binary classification for eBay
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+http://www.ebay.com/
+\end_layout
+
+\end_inset
+
+ auctions could prove to be an excellent tool for our work with penny auctions.
 \end_layout
 
 \begin_layout Section*
@@ -196,18 +404,9 @@ http://quibidsinsider.com/
 \end_layout
 
 \begin_layout Standard
-Our approach to predicting when a win would occur was heavily influenced
- by the methods developed in 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "JStix:2012"
-
-\end_inset
-
-.
- This paper also gave us hope that this was an approachable problem.
- This paper describes three algorithms to mimic the strategies of real bidders
- in an auction.
+Once the data had been acquired we manipulated it further to extract and
+ expand features to create data sets for each of our hypotheses.
+ We tried to mimic the strategies of real bidders in an auction.
 \end_layout
 
 \begin_layout Section*
@@ -216,8 +415,8 @@ Plan
 
 \begin_layout Standard
 Our goal for this project is to show that penny auctions have enough structure
- for use in a learning algorithm to be able to make decent predictions on
- auction outcomes.
+ that a learning algorithm will be able to make decent predictions on certain
+ aspects of auction outcomes.
  The following hypotheses were constructed with this in mind.
 \end_layout
 
@@ -226,17 +425,25 @@ Hypotheses
 \end_layout
 
 \begin_layout Itemize
-Given a bid, it is possible to predict whether this will be a winning bid.
-\end_layout
-
-\begin_layout Itemize
 Given n bids, it is possible to predict whether the next bid will be a winning
- bid.
+ or losing bid.
+ We are testing whether a bid history can provide a recognizable ending
+ or continuing pattern for an auction.
 \end_layout
 
 \begin_layout Itemize
 Given a user in an auction, it is possible to predict whether this user
  will win.
+ Users with specific bidding behaviours are more likely to win than others.
+ We observed that often auctions end with many bidders still willing to
+ bid believing someone else will bid.
+\end_layout
+
+\begin_layout Itemize
+Given a particular auction state, it is possible to predict the end price
+ of the auction.
+ This is similar to the first hypothesis, but will use regression instead
+ of classification to get more complete information about the final price.
 \end_layout
 
 \begin_layout Subsection*
@@ -244,7 +451,108 @@ Experimental Design
 \end_layout
 
 \begin_layout Standard
-What we were thinking.
+We used Mlpy to provide a framework for testing our hypotheses.
+ Mlpy is an open source machine learning library written in Python providing
+ functionality for regression, classification, and clustering which allowed
+ us to run a variety of algorithms against our data sets.
+ Our first two hypotheses were tested using the following included functions
+ for classification:
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Large Linear Classification
+\series default
+ allows use of the LIBLINEAR library's 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "LIBLINEAR"
+
+\end_inset
+
+ different solvers.
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+k-means
+\series default
+ uses iterative partioning to seperate data into 
+\shape italic
+k
+\shape default
+ clusters.
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Classification Tree
+\series default
+ - 
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Kernel Fisher Discriminant Classifier
+\series default
+ - polynomial kernel, Gaussian Kernel
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Maximum Likelihood Classifier
+\series default
+ - Unfortunately this caused a memory error on our data sets while using
+ the undergraduate machines.
+\end_layout
+
+\begin_layout Standard
+On the third hypothesis we used the following tests for regression:
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Ordinary Least Squares
+\series default
+ - 
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Ridge Regression
+\series default
+ - 
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Partial Least Squares
+\series default
+ - 
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Last Angle Regression (LARS)
+\series default
+ -
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Elastic Net
+\series default
+ - 
 \end_layout
 
 \begin_layout Section*
@@ -253,6 +561,9 @@ Results
 
 \begin_layout Standard
 What we found.
+ Vouchers bids, having the least emotional attachment during bidding (you
+ don't get to take anything home), yielded much better prediction results
+ than their material counterparts such as gift cards.
 \end_layout
 
 \begin_layout Section*
@@ -264,12 +575,32 @@ What we think it means.
 \end_layout
 
 \begin_layout Section*
-Conclusion
+Conclusion: Lessons Learned
 \end_layout
 
 \begin_layout Standard
-Machine learning is fun! Not crashing web sites while scraping their data
- is a Good Thing.
+Over the course of the project a lot of knowledge was gained about the problem
+ domain.
+ We learned that it is probably a bad idea to play penny auctions, as they
+ are very close to gambling and highly unpredictable due to irrational human
+ behaviour.
+\end_layout
+
+\begin_layout Standard
+We learned a lot about scraping web sites for content.
+ We initially ran into some trouble with placing too much load on the site
+ we were scraping and were contacted by its web hosting company.
+ After we reduced and distributed the amount of requests we had no further
+ problems parsing.
+\end_layout
+
+\begin_layout Standard
+We had some ideas for further work on the topic.
+ It would be interesting to extend upon our project using the information
+ we gathered to create a classifaction algorithm, classifying different
+ users to decide whether it is worth it to bid against the remaining bidders.
+ We didn't have a chance to try our predictions in the wild due to time
+ and money constraints.
 \end_layout
 
 \begin_layout Standard
