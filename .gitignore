@@ -20,7 +20,7 @@
 *.rar
 *.tar
 *.zip
-data/
+
 # Logs and databases #
 ######################
 *.log

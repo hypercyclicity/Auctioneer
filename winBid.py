@@ -18,7 +18,6 @@ def DataBuilder():
 		secs10 = timedelta(seconds=10)
 		d = timedelta(seconds=10)
 		f = open('./data/winBidx.csv','w')
-		f.write("prince,time_left,time,dif_time,count10secs,count1min,count5min,hour,value,gameplay,isVoucher,y\n")
 		y = open('./data/winBidy.csv','w')
 		con = sqlite3.connect('auction.db')
 		cur = con.cursor()

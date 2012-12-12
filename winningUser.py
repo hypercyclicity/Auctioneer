@@ -41,8 +41,8 @@ def DataBuilder():
 				if (c < 1100 or winning == 1):
 					cur.execute('SELECT count(*) FROM bid b WHERE b.id == ? AND 					user == ?', (ID,use[0]))
 					totalUserBids = cur.fetchall()[0][0];
-					minbiddate = Util.GetMindate(ID,use[0], cur)
-					maxbiddate = Util.GetMaxdate(ID,use[0], cur)
+					minbiddate = calendar.timegm(Util.GetMindate(ID,use[0], cur).timetuple())
+					maxbiddate = calendar.timegm(Util.GetMaxdate(ID,use[0], cur).timetuple())
 					if totalUserBids != 1:
 						aveTimeBetweenBids = (maxbiddate - minbiddate)/(totalUserBids-1)
 					else:
@@ -54,10 +54,10 @@ def DataBuilder():
 					f.write(str(hour) + " " )
 					f.write(str(value) + " " )
 					f.write(str(isGameplay) + " " )
-					f.write(str(isVoucher) + "\n" )
-					f.write(str(totalUserBids) + "\n" )
-					f.write(str(minbiddate) + "\n" )
-					f.write(str(maxbiddate) + "\n" )
+					f.write(str(isVoucher) + " " )
+					f.write(str(totalUserBids) + " " )
+					f.write(str(minbiddate) + " " )
+					f.write(str(maxbiddate) + " " )
 					f.write(str(aveTimeBetweenBids) + "\n" )
 					y.write(str(winning) + "\n")
 					print c," bids complete complete         \r",
