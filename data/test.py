@@ -20,12 +20,12 @@ def printStats(y,yhat,algorithm,weight,beta,label):
     if (float(predictEnd[0])/float(predictEnd[1]))*(float(predictNotEnd[0])/float(predictNotEnd[1])) != 0:
         print label
         print algorithm + "  " + str(weight) + "  " + str(beta)
-        print "Accuracy on winning bids = "+str(float(predictEnd[0])/float(predictEnd[1])) "  " + str(predictEnd[0])+"//"+str(predictEnd[1])
+        print "Accuracy on winning bids = "+str(float(predictEnd[0])/float(predictEnd[1]))+ "  " + str(predictEnd[0])+"//"+str(predictEnd[1])
         print "Accuracy on non-winning bids = "+str(float(predictNotEnd[0])/float(predictNotEnd[1])) + str(predictNotEnd[0])+"//"+str(predictNotEnd[1])
 
 def shuffle_in_unison_inplace(a, b):
     assert len(a) == len(b)
-    p = np.random.permuation(len(a))
+    p = np.random.permutation(len(a))
     return a[p], b[p]
 
 
