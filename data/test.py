@@ -20,8 +20,8 @@ def printStats(y,yhat,algorithm,weight,beta,label):
     if (float(predictEnd[0])/float(predictEnd[1]))*(float(predictNotEnd[0])/float(predictNotEnd[1])) != 0:
         print label
         print algorithm + "  " + str(weight) + "  " + str(beta)
-        print "Accuracy on winning bids = "+str(float(predictEnd[0])/float(predictEnd[1]))
-        print "Accuracy on non-winning bids = "+str(float(predictNotEnd[0])/float(predictNotEnd[1]))
+        print "Accuracy on winning bids = "+str(float(predictEnd[0])/float(predictEnd[1])) "  " + str(predictEnd[0])+"//"+str(predictEnd[1])
+        print "Accuracy on non-winning bids = "+str(float(predictNotEnd[0])/float(predictNotEnd[1])) + str(predictNotEnd[0])+"//"+str(predictNotEnd[1])
 
 def shuffle_in_unison_inplace(a, b):
     assert len(a) == len(b)
@@ -50,7 +50,7 @@ def main(xfile,yfile):
     algorithms = ['l2r_lr','l2r_l2loss_svc_dual','l2r_l2loss_svc','l2r_l1loss_svc_dual','mcsvm_cs','l1r_l2loss_svc','l1r_lr','l2r_lr_dual']
     for algorithm in algorithms:
         for i in range(1,1000):
-            beta =2 
+            beta =1
             w={0:0.1, 1:(1+i*.01)}
             solver = mlpy.LibLinear(solver_type=algorithm, C=beta, eps=0.01, weight=w)
             
