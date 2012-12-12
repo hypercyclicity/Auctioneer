@@ -53,29 +53,29 @@ def main(xfile,yfile,algorithm=""):
 	ftest.write("Weight beta Accuracy_on_winning_bids Accuracy_on_nonwinning_bids\n")
 	ftrain.write("Weight beta Accuracy_on_winning_bids Accuracy_on_nonwinning_bids\n")
         for i in range(1,10):
-	    for b in range(1,5):
+	    for b in range(1,20):
 	    	
-            	beta = .2*b
-            	w={0:1, 1:(.1+i*.1)}
+            	beta = .05*b
+            	w={0:1, 1:(.1+i*.2)}
             	solver = mlpy.LibLinear(solver_type=algorithm, C=beta, eps=0.01, weight=w)
             	solver.learn(xtrain, ytrain)         
 
             	yhat = solver.pred(xtrain)
-            	printStats(ytrain,yhat,algorithm,1+i*.1,beta,"train errors",ftrain)
+            	printStats(ytrain,yhat,algorithm,.1+i*.2,beta,"train errors",ftrain)
         
         	yhat = solver.pred(xtest)
-            	printStats(ytest,yhat,algorithm,1+i*.1,beta,"test errors", ftest)
+            	printStats(ytest,yhat,algorithm,.1+i*.2,beta,"test errors", ftest)
 	ftest.close()
 	ftrain.close()
-    solver = mlpy.KNN(2)
+        
 
-    solver.learn(xtrain, ytrain)         
-
-
+'''
     ftest = open("Kmeans"+'_Test.csv','w')
     ftrain = open("Kmeans" +'_Train.csv','w')
     ftest.write("Weight beta Accuracy_on_winning_bids Accuracy_on_nonwinning_bids\n")
     ftrain.write("Weight beta Accuracy_on_winning_bids Accuracy_on_nonwinning_bids\n")
+    solver = mlpy.KNN(2)
+    solver.learn(xtrain, ytrain) 
     yhat = solver.pred(xtrain)
     printStats(ytrain,yhat,"Kmeans","none","none","train errors", ftrain)
     yhat = solver.pred(xtest)
@@ -95,7 +95,7 @@ def main(xfile,yfile,algorithm=""):
     printStats(ytest,yhat,"Classification Tree","none","none","test errors", ftest)
     ftest.close()
     ftrain.close()
-
+'''
   
 
 if __name__ == "__main__":
