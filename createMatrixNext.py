@@ -21,6 +21,7 @@ Y = A classification matrix of whether the next (10th in the sequence) bid wins 
 """
 
 def DataBuilder():
+	breakNum = 2000
 	try:
 		sep = " "
 		xMatrix = open('./data/predictNextBidX.csv','w')
@@ -30,17 +31,19 @@ def DataBuilder():
 		cur.execute('SELECT DISTINCT id FROM bid;')
 		auctions = cur.fetchall()
 		c = 0
+		step = 0
 		for auction in auctions:
+			step = step + 1
+			if c >= breakNum:
+				break
                         query = 'SELECT * FROM bid WHERE id == ? ORDER by price;'
                         cur.execute(query, auction)
                         bids = cur.fetchall()
-
-			
-                        print "Length of bids : ", len(bids)
-
                         # We need at least 10 bids to do this
-                        if len(bids) > 9:
+                        if len(bids) > 9 and step & 1  :
                                 for i in range(0,len(bids) - 10 + 1):
+                                	if c >= breakNum:
+						break
                                         # Leaving users out at the moment
                                         bidslice = bids[i:i+9]  # first nine
                                         last = bids[i+9]        # number ten
@@ -49,11 +52,13 @@ def DataBuilder():
 					query = 'SELECT count(*) FROM winner WHERE id == ? AND price == ?;'
                                         cur.execute(query, (last[0], last[2]))
                                         isWinner = cur.fetchone()[0]
-                                        
-                                        if( c < 1100 or isWinner == 1):
+                                        step  = step +1
+                                        if( (step%5 == 0 and c < 2000) or (step%3 == 0 and isWinner == 1 )):
 		                                
 		                                yMatrix.write(str(isWinner) + "\n")
+		                                spaceCounter = 0
 		                                for b in bidslice:
+		                                	spaceCounter = spaceCounter + 1
 		                                        price = b[2]
 		                                        timeLeft = b[4]
 		                                        bidDate = Util.StringToUTC(str(b[5]))
@@ -79,15 +84,18 @@ def DataBuilder():
 		                                        xMatrix.write(str(hour) + " " )
 		                                        xMatrix.write(str(value) + " " )
 		                                        xMatrix.write(str(isGameplay) + " " )
-		                                        xMatrix.write(str(isVoucher) + " " )
-
+		                                        xMatrix.write(str(isVoucher))
+		                                        if spaceCounter < 9:
+		                                        	xMatrix.write(" ")
 		                                # Close the row
 		                                xMatrix.write("\n")
                                                 c = c +1
-                                        
+                                                step  = step +1
+                                                print c
+                                        	if c >= breakNum:
+							break
 
-                                     	if c >= 2000:
-						break
+                                     	
                 
                 # End auction loop
 		xMatrix.close()
