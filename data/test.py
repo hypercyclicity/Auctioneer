@@ -55,16 +55,16 @@ def main(xfile,yfile,algorithm=""):
         for i in range(1,10):
 	    for b in range(1,20):
 	    	
-            	beta = .05*b
-            	w={0:1, 1:(0+i*.1)}
+            	beta = .2 + .1*b
+            	w={0:1, 1:(+i*.5)}
             	solver = mlpy.LibLinear(solver_type=algorithm, C=beta, eps=0.01, weight=w)
             	solver.learn(xtrain, ytrain)         
 
             	yhat = solver.pred(xtrain)
-            	printStats(ytrain,yhat,algorithm,0+i*.1,beta,"train errors",ftrain)
+            	printStats(ytrain,yhat,algorithm,.0+i*.2,beta,"train errors",ftrain)
         
         	yhat = solver.pred(xtest)
-            	printStats(ytest,yhat,algorithm,0+i*.1,beta,"test errors", ftest)
+            	printStats(ytest,yhat,algorithm,.0+i*.2,beta,"test errors", ftest)
 	ftest.close()
 	ftrain.close()
         
