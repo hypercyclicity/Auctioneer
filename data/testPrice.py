@@ -32,7 +32,7 @@ def shuffle_in_unison_inplace(a, b):
 def main(xfile,yfile,algorithm=""):
     x = np.loadtxt(open(xfile,"rb"),delimiter=" ")
     y = np.loadtxt(open(yfile,"rb"),delimiter=",")
-
+    np.random.seed(0)
     
     x,y = shuffle_in_unison_inplace(x,y)
 
@@ -45,44 +45,35 @@ def main(xfile,yfile,algorithm=""):
 
     ytrain =  y[0:tr_size]
     ytest = y[tr_size:(tr_size+te_size)]
-    
-    algorithms = ['l1r_l2loss_svc','l1r_lr']
-    for algorithm in algorithms:
-	ftest = open(str(algorithm) +'_Test.csv','w')
-	ftrain = open(str(algorithm) +'_Train.csv','w')
-	ftest.write("Weight beta Accuracy_on_winning_bids Accuracy_on_nonwinning_bids\n")
-	ftrain.write("Weight beta Accuracy_on_winning_bids Accuracy_on_nonwinning_bids\n")
-        for i in range(1,10):
-	    for b in range(1,20):
-	    	
-            	beta = .05*b
-            	w={0:1, 1:(0+i*.1)}
-            	solver = mlpy.LibLinear(solver_type=algorithm, C=beta, eps=0.01, weight=w)
-            	solver.learn(xtrain, ytrain)         
 
-            	yhat = solver.pred(xtrain)
-            	printStats(ytrain,yhat,algorithm,0+i*.1,beta,"train errors",ftrain)
-        
-        	yhat = solver.pred(xtest)
-            	printStats(ytest,yhat,algorithm,0+i*.1,beta,"test errors", ftest)
-	ftest.close()
-	ftrain.close()
-        
-
-'''
-    ftest = open("Kmeans"+'_Test.csv','w')
-    ftrain = open("Kmeans" +'_Train.csv','w')
+    ftest = open("OLS"+'_Test.csv','w')
+    ftrain = open("OLS" +'_Train.csv','w')
     ftest.write("Weight beta Accuracy_on_winning_bids Accuracy_on_nonwinning_bids\n")
     ftrain.write("Weight beta Accuracy_on_winning_bids Accuracy_on_nonwinning_bids\n")
-    solver = mlpy.KNN(2)
-    solver.learn(xtrain, ytrain) 
+    solver = mlpy.PLS(1000)    
+    print solver.learn(xtrain, ytrain) 
+   #xx = np.arange(np.min(xtrain), np.max(xtrain), 0.01).reshape(-1, 1)
     yhat = solver.pred(xtrain)
-    printStats(ytrain,yhat,"Kmeans","none","none","train errors", ftrain)
+    printStats(ytrain,yhat,"OLS","none","none","train errors", ftrain)
     yhat = solver.pred(xtest)
-    printStats(ytest,yhat,"Kmeans","none","none","test errors", ftest)
+    printStats(ytest,yhat,"OLS","none","none","test errors", ftest)
     ftest.close()
     ftrain.close()
-
+'''
+    ftest = open("Ridge"+'_Test.csv','w')
+    ftrain = open("Ridge" +'_Train.csv','w')
+    ftest.write("Weight beta Accuracy_on_winning_bids Accuracy_on_nonwinning_bids\n")
+    ftrain.write("Weight beta Accuracy_on_winning_bids Accuracy_on_nonwinning_bids\n")
+    solver = mlpy.Ridge()
+    solver.learn(xtrain, ytrain) 
+    yhat = solver.pred(xtrain)
+    printStats(ytrain,yhat,"Ridge","none","none","train errors", ftrain)
+    yhat = solver.pred(xtest)
+    printStats(ytest,yhat,"Ridge","none","none","test errors", ftest)
+    ftest.close()
+    ftrain.close()
+'''
+'''
     ftest = open("Classification" +'_Test.csv','w')
     ftrain = open("Classification"+'_Train.csv','w')
     ftest.write("Weight beta Accuracy_on_winning_bids Accuracy_on_nonwinning_bids\n")
