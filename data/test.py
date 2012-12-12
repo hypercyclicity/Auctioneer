@@ -6,7 +6,7 @@ import sys
 def getYhat(xtrain,ytrain,solver):
     solver = mlpy.LibLinear(solver_type='l2r_lr', C=1, eps=0.01, weight={})
 
-def printStats(y,yhat,algorithm,weight,beta,label):
+def printStats(y,yhat,algorithm,weight,beta,label, f):
     predictEnd = [0,0]
     predictNotEnd = [0,0] 
     for r1,r2 in zip(y,yhat):
@@ -18,10 +18,11 @@ def printStats(y,yhat,algorithm,weight,beta,label):
             if r2 == 0:
                 predictNotEnd[0] = predictNotEnd[0] + 1
     if (float(predictEnd[0])/float(predictEnd[1]))*(float(predictNotEnd[0])/float(predictNotEnd[1])) != 0:
-        print label
-        print algorithm + "  " + str(weight) + "  " + str(beta) + " "
-        print "Accuracy on winning bids = "+str(float(predictEnd[0])/float(predictEnd[1]))+ "  " + str(predictEnd[0])+"/"+str(predictEnd[1])
-        print "Accuracy on non-winning bids = "+str(float(predictNotEnd[0])/float(predictNotEnd[1]))  + "  "+ str(predictNotEnd[0])+"/"+str(predictNotEnd[1])
+    	f.write(str(weight)+" "+str(beta)+ " " +str(float(predictEnd[0])/float(predictEnd[1]))+" "+str(float(predictNotEnd[0])/float(predictNotEnd[1]))+ '\n')
+   #     print label
+   #     print algorithm + "  " + str(weight) + "  " + str(beta)
+   #     print "Accuracy on winning bids = "+str(float(predictEnd[0])/float(predictEnd[1]))+ "  " + str(predictEnd[0])+"//"+str(predictEnd[1])
+   #     print "Accuracy on non-winning bids = "+str(float(predictNotEnd[0])/float(predictNotEnd[1])) + str(predictNotEnd[0])+"//"+str(predictNotEnd[1])
 
 def shuffle_in_unison_inplace(a, b):
     assert len(a) == len(b)
@@ -47,43 +48,55 @@ def main(xfile,yfile,algorithm=""):
     
     algorithms = ['l1r_l2loss_svc','l1r_lr']
     for algorithm in algorithms:
-	print algorithm + " starting"
+	ftest = open(str(algorithm) +'_Test.csv','w')
+	ftrain = open(str(algorithm) +'_Train.csv','w')
+	ftest.write("Weight beta Accuracy_on_winning_bids Accuracy_on_nonwinning_bids\n")
+	ftrain.write("Weight beta Accuracy_on_winning_bids Accuracy_on_nonwinning_bids\n")
         for i in range(1,10):
 	    for b in range(1,5):
+	    	
             	beta = .2*b
             	w={0:1, 1:(.1+i*.1)}
             	solver = mlpy.LibLinear(solver_type=algorithm, C=beta, eps=0.01, weight=w)
             	solver.learn(xtrain, ytrain)         
 
             	yhat = solver.pred(xtrain)
-            #	printStats(ytrain,yhat,algorithm,w,beta,"train errors")
+            	printStats(ytrain,yhat,algorithm,1+i*.1,beta,"train errors",ftrain)
         
-            	yhat = solver.pred(xtest)
-            	printStats(ytest,yhat,algorithm,w,beta,"test errors")
+        	yhat = solver.pred(xtest)
+            	printStats(ytest,yhat,algorithm,1+i*.1,beta,"test errors", ftest)
+	ftest.close()
+	ftrain.close()
     solver = mlpy.KNN(2)
 
     solver.learn(xtrain, ytrain)         
 
-    yhat = solver.pred(xtrain)
-  #  printStats(ytrain,yhat,"Kmeans","none","none","train errors")
-    yhat = solver.pred(xtest)
-    printStats(ytest,yhat,"Kmeans","none","none","test errors")
 
-    
+    ftest = open("Kmeans"+'_Test.csv','w')
+    ftrain = open("Kmeans" +'_Train.csv','w')
+    ftest.write("Weight beta Accuracy_on_winning_bids Accuracy_on_nonwinning_bids\n")
+    ftrain.write("Weight beta Accuracy_on_winning_bids Accuracy_on_nonwinning_bids\n")
+    yhat = solver.pred(xtrain)
+    printStats(ytrain,yhat,"Kmeans","none","none","train errors", ftrain)
+    yhat = solver.pred(xtest)
+    printStats(ytest,yhat,"Kmeans","none","none","test errors", ftest)
+    ftest.close()
+    ftrain.close()
+
+    ftest = open("Classification" +'_Test.csv','w')
+    ftrain = open("Classification"+'_Train.csv','w')
+    ftest.write("Weight beta Accuracy_on_winning_bids Accuracy_on_nonwinning_bids\n")
+    ftrain.write("Weight beta Accuracy_on_winning_bids Accuracy_on_nonwinning_bids\n")    
     solver = mlpy.ClassTree()
     solver.learn(xtrain, ytrain)         
     yhat = solver.pred(xtrain)
-  #  printStats(ytrain,yhat,"Classification Tree","none","none","train errors")
+    printStats(ytrain,yhat,"Classification Tree","none","none","train errors", ftrain)
     yhat = solver.pred(xtest)
-    printStats(ytest,yhat,"Classification Tree","none","none","test errors")
-   
-    mlpy.KFDAC(lmb=0.001, kernel=mlpy.KernelGaussian(sigma=1.0))
-    solver.learn(xtrain, ytrain)         
-    yhat = solver.pred(xtrain)
-  #  printStats(ytrain,yhat,"KFDAC","none","none","train errors")
-    yhat = solver.pred(xtest)
-    printStats(ytest,yhat,"KFDAC","none","none","test errors")
-    
+    printStats(ytest,yhat,"Classification Tree","none","none","test errors", ftest)
+    ftest.close()
+    ftrain.close()
+
+  
 
 if __name__ == "__main__":
     xfile = sys.argv[1]
