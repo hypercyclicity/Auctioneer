@@ -21,7 +21,7 @@ Y = A classification matrix of whether the next (10th in the sequence) bid wins 
 """
 
 def DataBuilder():
-	breakNum = 2000
+	breakNum = 10000
 	try:
 		sep = " "
 		xMatrix = open('./data/predictNextBidX.csv','w')
@@ -53,7 +53,7 @@ def DataBuilder():
                                         cur.execute(query, (last[0], last[2]))
                                         isWinner = cur.fetchone()[0]
                                         step  = step +1
-                                        if( (step%5 == 0 and c < 2000) or (step%3 == 0 and isWinner == 1 )):
+                                        if( (step%7 == 0) or (step%3 == 0 and isWinner == 1 )):
 		                                
 		                                yMatrix.write(str(isWinner) + "\n")
 		                                spaceCounter = 0
